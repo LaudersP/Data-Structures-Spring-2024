@@ -1,3 +1,17 @@
+# Visual Studio 2022 files
+*.tlog
+*.exe.recipe
+*.ilk
+*.log
+*.pdb
+*.idb
+*.lastbuildstate
+*.vsidx
+*.ipch
+*.suo
+*.VC.db
+*.vcxproj.FileListAbsolute.txt
+
 # Prerequisites
 *.d
 
