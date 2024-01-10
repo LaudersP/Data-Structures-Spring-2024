@@ -17,6 +17,9 @@ int main(int argc, char** argv) {
     int x = 42;
     float f = 3.14f;
     int* xptr = &x;
+
+    *xptr = 43;     // de-refernece xptr to (indirectly) change x to 43
+
     // The c style output of all three values
     //printf("Hello World %d:%f:%p\n", x, f, xptr);
     // Same thing, but using C++-style streams
