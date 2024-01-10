@@ -2,42 +2,46 @@
 #include "person.h"
 #include <iostream>
 
-// Default Constructor
-Person::Person() {
-	std::cout << "This is the default constructor" << std::endl;
-}
-
-// Alternative Constructor
-Person::Person(int start_x, int start_y, std::string start_name) : _x(start_x), y(start_y), _name(start_name) {
-	// Set our ATTRIBUTES (x and y) to the values of these PARAMETERS.
-	// Remeber that parameters go away when the function ends
-	// _x = start_x;			// Note that here, x, y, and name are allocated before this method
-	// y = start_y;				// starts
-	// _name = start_name;		
-
-	std::cout << "This is the constructor that takes arguments" << std::endl;
-}
-
-Person::~Person() {
-	std::cout << "This is the deconstructor of object with x=" << _x << std::endl;
-}
-
-std::string Person::Get_Name() {
-	return _name;
-}
-
-void Person::Meth1() {
-	std::cout << "This is method1" << std::endl;
-}
-
-void Person::Meth2() {
-	// Note how we can access OUR protected member (outside users can't)
-	Meth1();
-	std::cout << "This is method2" << std::endl;
-}
-
-
-void func()
+void test::Person::meth1()
 {
-	std::cout << "This is func" << std::endl;
+	std::cout << "This is method1\n";
+}
+
+void test::Person::meth2()
+{
+	// Note how we can access OUR protected member (outside users can't)
+	meth1();
+	std::cout << "This is method2\n";
+}
+
+test::Person::Person()
+{
+	std::cout << "This is the default constructor\n";
+}
+
+
+test::Person::Person(int start_x, int start_y, std::string start_name) : x(start_x), y(start_y), name(start_name)
+{
+	std::cout << "This is the constructor that takes arguments\n";
+	// Set our ATTRIBUTES (x and y) to the value of these PARAMETERS.
+	// Remember that parameters go away when the function ends
+	//x = start_x;			// Note that here, x, y, and name are allocated before this method
+	//y = start_y;			// starts and THEN we copy over the values here.  You can do
+	//name = start_name;		// this a bit more efficiently by using the initializers above
+}
+
+
+test::Person::~Person()
+{
+	std::cout << "This is the destructor of the object with x=" << x << "\n";
+}
+
+std::string test::Person::get_name()
+{
+	return name;
+}
+
+void test::func()
+{
+	std::cout << "This is func\n";
 }
