@@ -1,3 +1,9 @@
+/**
+* @file Array_List.h
+* 
+* @brief Declaration of the ArrayList class.
+*/
+
 #ifndef ARRAY_LIST_H
 #define ARRAY_LIST_H
 
@@ -5,9 +11,13 @@
 
 namespace ssuds {
 	/**
+	* @class ArrayList
+	* 
 	* @brief ArrayList class for dynamic array of strings.
 	*
 	* This class provides a basic functionality for managing an array of strings with dynamic memory allocation.
+	* This includes Appending, Inserting, Clearing, Getting, Finding, Removing, and Resetting of list strings.
+	* Along with capabilities to get the length of the list at its current state.
 	*/
 	class ArrayList {
 	protected:
@@ -44,7 +54,7 @@ namespace ssuds {
 		unsigned int Size() const;
 
 		/**
-		* @breif Insert a string at a set position in the list.
+		* @brief Insert a string at a set position in the list.
 		* 
 		* @param s The string to be inserted.
 		* @param position The index for the string to be inserted at.
@@ -52,14 +62,14 @@ namespace ssuds {
 		void Insert(std::string s, const unsigned int position);
 
 		/**
-		* @breif Clears the list and resets it back to the beginning values.
+		* @brief Clears the list and resets it back to the beginning values.
 		* 
 		* Similar to the destructor but meant to be used during list's lifetime.
 		*/
 		void Clear();
 
 		/**
-		* @breif Gets a string at a defined index.
+		* @brief Gets a string at a defined index.
 		* 
 		* @param index The position of the desired string.
 		* 
@@ -68,7 +78,7 @@ namespace ssuds {
 		std::string Get(const unsigned int index) const;
 
 		/**
-		* @breif Find a string in the list, with a optional starting location.
+		* @brief Find a string in the list, with a optional starting location.
 		* 
 		* @param s String to be found.
 		* @param index Desired starting position (optional).
@@ -77,8 +87,21 @@ namespace ssuds {
 		*/
 		int Find(std::string s, unsigned int index = 0) const;
 
-		// FOR TESTING
-		std::string GetString(unsigned int pos);
+		/**
+		* @brief Remove a string at a given index position.
+		* 
+		* @param index Position of the string to remove.
+		*/
+		void Remove(const unsigned int index);
+
+		/**
+		* @brief Remove all instances of a desired string from the list.
+		* 
+		* @param s String to find and remove from the entire list.
+		* 
+		* @return The number of times the given string was removed.
+		*/
+		int Remove_All(std::string s);
 	};
 }
 
