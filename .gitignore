@@ -44,3 +44,7 @@
 *.exe
 *.out
 *.app
+
+# Folders to ignore (Hold class notes)
+Class Notes/
+temp/
