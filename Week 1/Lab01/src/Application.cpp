@@ -5,35 +5,13 @@ int main() {
 	// Create an instance of ArrayList class
 	ssuds::ArrayList List;
 
-	// === Development testing ===
-	// Variable to hold the size of the list
-	unsigned int listSize = List.Size();
-
-	// Print the size of 'List'
-	std::cout << "Size of List: " << listSize << std::endl;
-
-	// Append 'Bob' to the List
 	List.Append("Bob");
-
-	// Get the new size of 'List'
-	listSize = List.Size();
-
-	// Print the size of 'List'
-	std::cout << "Size of List: " << listSize << std::endl;
-
-	// Print strings in the list
-	for (int i = 0; i < List.Size(); i++) {
-		std::cout << List.GetString(i) << std::endl;
-	}
-
-	// Append 'Susan' to the List
 	List.Append("Susan");
-
-	// Get the new size of 'List'
-	listSize = List.Size();
-
-	// Print the size of 'List'
-	std::cout << "Size of List: " << listSize << std::endl;
+	List.Append("Jim");
+	List.Insert("Jeff@0", 0);
+	List.Insert("Jeff@2", 2);
+	List.Insert("Jeff@4", 4);
+	List.Insert("Jeff@6", 6);
 
 	// Print strings in the list
 	for (int i = 0; i < List.Size(); i++) {
@@ -41,10 +19,16 @@ int main() {
 			std::cout << "[" << List.GetString(i);
 		}
 		else if (i == (List.Size() - 1)) {
-			std::cout << ", " << List.GetString(i) << "]";
+			std::cout << ", " << List.GetString(i) << "]" << std::endl;
 		}
 		else {
 			std::cout << ", " << List.GetString(i);
 		}
 	}
+
+	// Get a string from the list
+	std::cout << List.Get(6) << std::endl;
+
+	// Find 'Bob' in the list
+	std::cout << List.Find("Parker") << std::endl;
 }
