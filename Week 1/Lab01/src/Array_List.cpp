@@ -1,10 +1,5 @@
-/**
-* out_of_range exception referenced from: Sams Teach Yourself C++ (ISBN13: 978-0-13-733468-1, Pages: 689-694)
-*/
-
 #include <Array_List.h>
 #include <iostream>
-#include <stdexcept>
 
 ssuds::ArrayList::ArrayList() {
 	_data = nullptr;
@@ -58,66 +53,59 @@ unsigned int ssuds::ArrayList::Size() const {
 }
 
 void ssuds::ArrayList::Insert(std::string s, const unsigned int index) {
-	// Try and catch out of range exceptions
-	try {
-		// Check that the desired index is in range
-		if (index >= 0 && index < _size + 1) {
-			// Check that the string is capable of insertion
-			//	1. If array list is empty
-			//	2. If the position will be the last position of the array
-			if ((_data == nullptr && _size == 0) || index == (_size + 1)) {
-				// Append value
-				Append(s);
+	// Check that the desired index is in range
+	if (index >= 0 && index < _size + 1) {
+		// Check that the string is capable of insertion
+		//	1. If array list is empty
+		//	2. If the position will be the last position of the array
+		if ((_data == nullptr && _size == 0) || index == (_size + 1)) {
+			// Append value
+			Append(s);
 
-				return;
-			}
-			// Increase array size
-			_size++;
+			return;
+		}
+		// Increase array size
+		_size++;
 
-			// Allocate a temporary array
-			std::string* tempData = new std::string[_size];
+		// Allocate a temporary array
+		std::string* tempData = new std::string[_size];
 
-			// Check that 'index' is greater than 0
-			if (index != 0) {
-				// Loop through the array
-				for (int i = 0; i < _size; i++) {
-					// Copy data from before the insertion index
-					if (i < index) {
-						tempData[i] = _data[i];
-					}
-					// Insertion
-					else if (i == index) {
-						tempData[index] = s;
-					}
-					// Copy data from after the insertion index
-					else if (i > index) {
-						tempData[i] = _data[i - 1];
-					}
+		// Check that 'index' is greater than 0
+		if (index != 0) {
+			// Loop through the array
+			for (int i = 0; i < _size; i++) {
+				// Copy data from before the insertion index
+				if (i < index) {
+					tempData[i] = _data[i];
 				}
-			}
-			else {
 				// Insertion
-				tempData[0] = s;
-
-				// Copy remainder of data
-				for (int i = 1; i < _size; i++) {
+				else if (i == index) {
+					tempData[index] = s;
+				}
+				// Copy data from after the insertion index
+				else if (i > index) {
 					tempData[i] = _data[i - 1];
 				}
 			}
-
-			// Free up old array
-			delete[] _data;
-
-			// Assign 'tempData' pointer to '_data'
-			_data = tempData;
 		}
 		else {
-			throw std::out_of_range("Provided position is out of range!");
+			// Insertion
+			tempData[0] = s;
+
+			// Copy remainder of data
+			for (int i = 1; i < _size; i++) {
+				tempData[i] = _data[i - 1];
+			}
 		}
+
+		// Free up old array
+		delete[] _data;
+
+		// Assign 'tempData' pointer to '_data'
+		_data = tempData;
 	}
-	catch (const std::out_of_range& e) {
-		// Printing the out_of_range exception
-		std::cout << "\nERROR: " << e.what() << std::endl;
+	else {
+		throw std::out_of_range("Provided position is out of range!");
 	}
 
 	return;
@@ -135,87 +123,66 @@ void ssuds::ArrayList::Clear() {
 }
 
 std::string ssuds::ArrayList::Get(const unsigned int index) const {
-	// Try and catch out of range exceptions
-	try {
-		// Check that 'index' is in range
-		if (index >= 0 && index < _size) {
-			// Return the string at the index position of the list
-			return _data[index];
-		}
-		else {
-			throw std::out_of_range("Provided position is out of range!");
-		}
+	// Check that 'index' is in range
+	if (index >= 0 && index < _size) {
+		// Return the string at the index position of the list
+		return _data[index];
 	}
-	catch (const std::out_of_range& e) {
-		// Printing the out_of_range exception
-		std::cout << "\nERROR: " << e.what() << std::endl;
+	else {
+		throw std::out_of_range("Provided position is out of range!");
 	}
 }
 
 int ssuds::ArrayList::Find(std::string s, unsigned int index) const {
-	// Try and catch out of range exceptions
-	try {
-		// Check that 'index' is in range
-		if (index >= 0 && index < _size) {
-			// Loop through the list
-			for (int i = index; i < _size; i++) {
-				// Check if the string has been found
-				if (_data[i] == s) {
-					// Return index
-					return i;
-				}
+	// Check that 'index' is in range
+	if (index >= 0 && index < _size) {
+		// Loop through the list
+		for (int i = index; i < _size; i++) {
+			// Check if the string has been found
+			if (_data[i] == s) {
+				// Return index
+				return i;
 			}
+		}
 
-			// Index was not found, return -1
-			return -1;
-		}
-		else {
-			throw std::out_of_range("Provided position is out of range!");
-		}
+		// Index was not found, return -1
+		return -1;
 	}
-	catch (const std::out_of_range& e) {
-		// Printing the out_of_range exception
-		std::cout << "\nERROR: " << e.what() << std::endl;
+	else {
+		throw std::out_of_range("Provided position is out of range!");
 	}
 }
 
 void ssuds::ArrayList::Remove(const unsigned int index) {
-	// Try and catch out of range exceptions
-	try {
-		// Check that 'index' is in range
-		if (index >= 0 && index < _size) {
-			// Remove the desired string
-			_data[index] = "";
+	// Check that 'index' is in range
+	if (index >= 0 && index < _size) {
+		// Remove the desired string
+		_data[index] = "";
 
-			// Decrease list size
-			_size--;
+		// Decrease list size
+		_size--;
 
-			// Allocate a temporary array
-			std::string* tempData = new std::string[_size];
+		// Allocate a temporary array
+		std::string* tempData = new std::string[_size];
 
-			// Loop through the list
-			for (int i = 0; i < _size + 1; i++) {
-				if (i < index) {
-					tempData[i] = _data[i];
-				}
-				else if (i > index) {
-					tempData[i - 1] = _data[i];
-				}
+		// Loop through the list
+		for (int i = 0; i < _size + 1; i++) {
+			if (i < index) {
+				tempData[i] = _data[i];
 			}
-
-			// Free up old array
-			delete[] _data;
-
-			// Assign 'tempData' pointer to '_data'
-			_data = tempData;
+			else if (i > index) {
+				tempData[i - 1] = _data[i];
+			}
 		}
-		else {
-			throw std::out_of_range("Provided position is out of range!");
-		}
+
+		// Free up old array
+		delete[] _data;
+
+		// Assign 'tempData' pointer to '_data'
+		_data = tempData;
 	}
-	catch (const std::out_of_range& e) {
-		// Printing the out_of_range exception
-		std::cout << "\nERROR: " << e.what() << std::endl;
+	else {
+		throw std::out_of_range("Provided position is out of range!");
 	}
 
 	return;

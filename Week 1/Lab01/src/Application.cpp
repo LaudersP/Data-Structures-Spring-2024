@@ -1,10 +1,12 @@
 /**
 * fstream referenced from: Sams Teach Yourself C++ (ISBN13: 978-0-13-733468-1, Pages: 672-675)
+* out_of_range exception referenced from: Sams Teach Yourself C++ (ISBN13: 978-0-13-733468-1, Pages: 689-694)
 */
 
 #include <iostream>
 #include <fstream>
 #include <Array_List.h>
+#include <stdexcept>
 
 #define OUTPUT_FILE_PATH "../../temp/visual_studio2022/ArrayListOutput.txt"
 
@@ -15,8 +17,15 @@ int main() {
 	// Step 4 Function call
 	Tester();
 
-	// Step 5 Function call
-	UserOptions();
+	// Try and catch out of range exceptions
+	try {
+		// Step 5 Function call
+		UserOptions();
+	}
+	catch (std::out_of_range& e) {
+		// Print out of range error
+		std::cout << "\nERROR: " << e.what() << std::endl;
+	}
 }
 
 // Step 4. Function for testing the ArrayList class
