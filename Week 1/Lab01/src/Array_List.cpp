@@ -189,7 +189,8 @@ void ssuds::ArrayList::Remove(const unsigned int index) {
 }
 
 int ssuds::ArrayList::Remove_All(std::string s) {
-	// Variable to hold number of instances removed
+	// MINE:
+	/*// Variable to hold number of instances removed
 	int removed = 0;
 
 	// Loop while 's' can still be found
@@ -201,5 +202,28 @@ int ssuds::ArrayList::Remove_All(std::string s) {
 		removed++;
 	}
 
-	return removed;
+	return removed;*/
+
+	// SOLUTION:
+	// Variable to hold the position of 's' found for removal
+	//   prevents unneeded loops through the array. Loops once
+	int cur_index = 0;
+
+	// Number of strings removed from the array
+	int num_removed = 0;
+
+	// While 'cur_index' is in range of the array's size
+	while (cur_index >= 0 && cur_index < _size) {
+		// Find The next occurence
+		cur_index = Find(s, cur_index);
+
+		// If the occurence if found
+		if (cur_index >= 0) {
+			// Remove the string at the found index
+			Remove(cur_index);
+
+			// Increase the removed count
+			num_removed++;
+		}
+	}
 }
