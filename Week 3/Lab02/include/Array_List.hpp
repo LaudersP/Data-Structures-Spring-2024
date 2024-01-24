@@ -23,6 +23,7 @@ namespace ssuds {
 	protected:
 		std::string* _data;	///< Pointer to the array of strings.
 		unsigned int _size;	///< The number of USED slots in the array list.
+		static const unsigned int _capacityMin = 1; ///< The number of minimum AVALIABLE starting slots.
 		unsigned int _capacity; ///< The number of AVALIABLE slots in the array list.
 
 	public:
@@ -48,9 +49,16 @@ namespace ssuds {
 		void Append(std::string s);
 
 		/***************************************************************************//**
-		* @brief Gets the current used spots of the array list.
+		* @brief Gets the current AVALIABLE slots of the array list.
 		*
-		* @return The current used spots of the list.
+		* @return The current AVALIABLE slots of the list.
+		******************************************************************************/
+		unsigned int Capacity() const;
+
+		/***************************************************************************//**
+		* @brief Gets the current USED spots of the array list.
+		*
+		* @return The current USED spots of the list.
 		******************************************************************************/
 		unsigned int Size() const;
 
@@ -63,11 +71,11 @@ namespace ssuds {
 		void Insert(std::string s, const unsigned int index);
 
 		/***************************************************************************//**
-		* @brief Gets the current avaliable slots of the array list.
+		* @brief Clears the list and resets it back to the beginning values.
 		*
-		* @return The current avaliable slots of the list.
+		* Similar to the destructor but meant to be used during list's lifetime.
 		******************************************************************************/
-		unsigned int Capacity() const;
+		void Clear();
 
 		/***************************************************************************//**
 		* @brief Gets a string at a defined index.
@@ -77,7 +85,40 @@ namespace ssuds {
 		* @return The string at position of the index value.
 		******************************************************************************/
 		std::string Get(const unsigned int index) const;
+
+		/***************************************************************************//**
+		* @brief Find a string in the list, with a optional starting location.
+		*
+		* @param s String to be found.
+		* @param index Desired starting position (optional).
+		*
+		* @return Index the string is found at or -1 if not found.
+		******************************************************************************/
+		int Find(std::string s, unsigned int index = 0) const;
+
+		/***************************************************************************//**
+		* @brief Remove a string at a given index position.
+		*
+		* @param index Position of the string to remove.
+		******************************************************************************/
+		void Remove(const unsigned int index);
+
+		/***************************************************************************//**
+		* @brief Remove all instances of a desired string from the list.
+		*
+		* @param s String to find and remove from the entire list.
+		*
+		* @return The number of times the given string was removed.
+		******************************************************************************/
+		int Remove_All(std::string s);
+
 	protected:
+		/***************************************************************************//**
+		* @brief Doubles the capacity of the array list.
+		*
+		* Increase the capacity of the array list by doubling it, much more efficent
+		* way then adding one spot at a time and transferring the old array over.
+		******************************************************************************/
 		void Grow();
 	};
 }
