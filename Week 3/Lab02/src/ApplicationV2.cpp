@@ -8,33 +8,23 @@ int main() {
 	a.Append(5);
 	a.Append(2);
 
-	for (unsigned int i = 0; i < a.Size(); i++) {
-		if (i == 0) {
-			std::cout << "[" << a.Get(i) << ", ";
-		}
-		else if (i == (a.Size() - 1)) {
-			std::cout << a.Get(i) << "]" << std::endl;
-		}
-		else {
-			std::cout << a.Get(i) << ", ";
-		}
-	}
+	std::cout << a << std::endl;
 
 	ssuds::ArrayListV2<float> b;
-	b.Append(2.678);
-	b.Append(9.4);
+	b.Append(2.678f);
+	b.Append(9.4f);
 	b.Append(5.1f);
-	b.Append(4.0);
+	b.Append(4.0f);
 
-	for (unsigned int i = 0; i < b.Size(); i++) {
-		if (i == 0) {
-			std::cout << "[" << b.Get(i) << ", ";
-		}
-		else if (i == (b.Size() - 1)) {
-			std::cout << b.Get(i) << "]" << std::endl;
-		}
-		else {
-			std::cout << b.Get(i) << ", ";
-		}
-	}
+	std::cout << b << std::endl;
+
+	ssuds::ArrayListV2<int> c;
+
+	c.Append(3);
+
+	c = a;
+
+	c.Insert(13, 2);
+
+	std::cout << c << std::endl;
 }
