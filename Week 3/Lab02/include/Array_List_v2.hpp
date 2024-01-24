@@ -2,6 +2,7 @@
 #define ARRAY_LIST_V2_H
 
 #include <ostream>
+#include <iostream>
 
 namespace ssuds {
 	template <class L>
@@ -61,6 +62,22 @@ namespace ssuds {
 		}
 
 		/***************************************************************************//**
+		* @brief Copy constructor of ArrayList class.
+		*
+		* Copies arrays for ArrayListV2.
+		******************************************************************************/
+		ArrayListV2(const ArrayListV2& other) {
+			_size = other._size;
+			_capacity = other._capacity;
+
+			_data = new L[_capacity];
+
+			for (unsigned int i = 0; i < other._size; i++) {
+				_data[i] = other[i];
+			}
+		}
+
+		/***************************************************************************//**
 		* @brief Destructor of ArrayList class.
 		*
 		* Deallocates memory used for ArrayList.
@@ -113,12 +130,13 @@ namespace ssuds {
 		* @param position The index for the item to be inserted at.
 		******************************************************************************/
 		void Insert(const L& item, const unsigned int index) {
+		//void Insert(const L& item, unsigned int index) {
 			// Check that index is in range of the array
 			if (index >= 0 && index < _size) {
 				// Check that the array is capable of insertion
 				// 1. If the array is empty
 				// 2. If the position will be the last slot
-				if ((_size == 0 && _capacity == _capacityMinimum) || (index = (_size + 1))) {
+				if ((_size == 0 && _capacity == _capacityMinimum) || (index == (_size + 1))) {
 					// Append the item instead
 					Append(item);
 
@@ -135,7 +153,7 @@ namespace ssuds {
 				_size++;
 
 				// Loop through the back items of the array until reaching 'index'
-				for (unsigned int i = _size; i > _size; i--) {
+				for (unsigned int i = _size; i > index; i--) {
 					// Copy everything one spot right in the array so the 'index' is empty
 					_data[i] = _data[i - 1];
 				}
@@ -170,13 +188,13 @@ namespace ssuds {
 		*
 		* @param index The position of the desired item.
 		*
-		* @return The item at position of the index value.
+		* @return The a referene of the item at position of the index value.
 		******************************************************************************/
-		L Get(const unsigned int index) const {
+		L& operator[](const unsigned int index) const {
 			// Check that 'index' is in range
 			if (index >= 0 && index < _size) {
-				// Return the item at position 'index'
-				return _data[index];;
+				// Return the irem at position 'index'
+				return _data[index];
 			}
 			else {
 				throw std::out_of_range("Provided position is out of range!");
@@ -284,6 +302,56 @@ namespace ssuds {
 			}
 
 			return num_removed;
+		}
+
+		/***************************************************************************//**
+		* @brief Output the array in a Python like format
+		*
+		* @param os Stream the array should be outputted via.
+		*
+		* @param a Array output will be from.
+		*
+		* @return The array in Python like format via chosen stream.
+		******************************************************************************/
+		friend std::ostream& operator<< (std::ostream& os, const ArrayListV2& a) {
+			for (unsigned int i = 0; i < a.Size(); i++) {
+				if (i == 0) {
+					os << "[" << a[i];
+				}
+				else if (i == (a.Size() - 1)) {
+					os << ", " << a[i] << "]" << std::endl;
+				}
+				else {
+					os << ", " << a[i];
+				}
+			}
+
+			return os;
+		}
+
+		/***************************************************************************//**
+		* @brief 'Deep-copy' the array to another instance.
+		*
+		* @param other Array to copy from.
+		*
+		* @return The new copy of the array.
+		******************************************************************************/
+		ArrayListV2& operator= (const ArrayListV2& other) {
+			_size = other._size;
+			_capacity = other._capacity;
+
+			delete[] _data;
+
+			// Allocate memory for the new 'deep-copy'
+			_data = new L[_capacity];
+
+			// Loop through copying array
+			for (unsigned int i = 0; i < other.Size(); i++) {
+				// Copy over old data
+				_data[i] = other[i];
+			}
+
+			return *this;
 		}
 	};
 }
