@@ -1,30 +1,53 @@
 #include <Array_List_v2.hpp>
+#include <Foo.hpp>
 #include <iostream>
 
+void Tester();
+
 int main() {
-	ssuds::ArrayListV2<int> a;
-	a.Append(4);
-	a.Append(9);
-	a.Append(5);
-	a.Append(2);
+	try {
+		// Standard test function
+		Tester();
+	}
+	catch (std::out_of_range& e) {
+		// Print out of range error message
+		std::cout << "\nERROR : " << e.what() << std::endl;
+	}
+}
 
-	std::cout << a << std::endl;
+// Step 5. Testing code
+void Tester() {
+	ssuds::ArrayListV2<float> FL;
 
-	ssuds::ArrayListV2<float> b;
-	b.Append(2.678f);
-	b.Append(9.4f);
-	b.Append(5.1f);
-	b.Append(4.0f);
+	FL.Append(3.1f);
+	FL.Append(4.2f);
+	FL.Append(5.3f);
 
-	std::cout << b << std::endl;
+	std::cout << FL << std::endl; // [3.1, 4.2, 5.3]
 
-	ssuds::ArrayListV2<int> c;
+	FL.Insert(1.4f, 0);
+	FL.Insert(2.5f, 1);
 
-	c.Append(3);
+	std::cout << FL << std::endl; // [1.4, 2.5, 3.1, 4.2, 5.3]
 
-	c = a;
+	std::cout << "Capacity: " << FL.Capacity() << std::endl; // 8
+	std::cout << "Size: " << FL.Size() << std::endl; // 5
 
-	c.Insert(13, 2);
+	FL.Append(1.4f);
+	FL.Remove_All(1.4f);
+	std::cout << FL << std::endl; // [2.5, 3.1, 4.2, 5.3]
 
-	std::cout << c << std::endl;
+	FL.Remove(0);
+	FL.Remove(2);
+	std::cout << FL << std::endl; // [3.1, 4.2]
+
+	std::cout << "Capacity2: " << FL.Capacity() << std::endl; // 2
+	std::cout << "Size2: " << FL.Size() << std::endl; // 2
+
+	FL.Clear();
+	std::cout << FL << std::endl; // []
+	std::cout << "Capacity2: " << FL.Capacity() << std::endl; // 1
+	std::cout << "Size2: " << FL.Size() << std::endl; // 0
+
+	std::cout << "\Testing Completed!" << std::endl;
 }
