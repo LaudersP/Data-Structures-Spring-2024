@@ -19,13 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\Application.cpp" />
     <ClCompile Include="..\..\src\ApplicationV2.cpp" />
-    <ClCompile Include="..\..\src\Array_List.cpp" />
     <ClCompile Include="..\..\src\Foo.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\include\Array_List.hpp" />
     <ClInclude Include="..\..\include\Array_List_v2.hpp" />
     <ClInclude Include="..\..\include\Foo.hpp" />
   </ItemGroup>
