@@ -1,20 +1,80 @@
-// Application.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
+#include <Array_List.hpp>
 #include <iostream>
 
-int main()
-{
-    std::cout << "Hello World!\n";
-}
+/*
+int main() {
+	ssuds::ArrayList tester;
 
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
+	tester.Append("Bob1");
+	tester.Append("Bob2");
+	tester.Append("Bob3");
+	tester.Append("Bob4");
+	tester.Append("Bob6");
+	tester.Append("Bob7");
+	tester.Append("Bob8");
+	tester.Append("Bob9");
 
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
+	tester.Insert("Bob5", 4);
+
+	std::cout << "Capacity: " << tester.Capacity() << std::endl; // 16
+	std::cout << "Size: " << tester.Size() << std::endl; // 9
+
+	std::cout << tester.Find("Bob9") << std::endl; // 8
+	std::cout << tester.Find("Bob1", 2) << std::endl; // -1
+
+	for (unsigned int i = 0; i < tester.Size(); i++) {
+		if (i == 0) {
+			std::cout << "[" << tester.Get(i) << ", ";
+		}
+		else if (i == (tester.Size() - 1)) {
+			std::cout << tester.Get(i) << "]" << std::endl;
+		}
+		else {
+			std::cout << tester.Get(i) << ", ";
+		}
+	}
+
+	tester.Remove(5); // Removes 'Bob6'
+
+	for (unsigned int i = 0; i < tester.Size(); i++) {
+		if (i == 0) {
+			std::cout << "[" << tester.Get(i) << ", ";
+		}
+		else if (i == (tester.Size() - 1)) {
+			std::cout << tester.Get(i) << "]" << std::endl;
+		}
+		else {
+			std::cout << tester.Get(i) << ", ";
+		}
+	}
+
+	std::cout << "Capacity: " << tester.Capacity() << std::endl; // 8
+	std::cout << "Size: " << tester.Size() << std::endl; // 8
+
+
+	tester.Append("Bob6");
+	tester.Insert("Bob6", 2);
+	tester.Append("Bob6");
+	tester.Insert("Bob6", 5);
+	tester.Append("Bob6");
+
+	for (unsigned int i = 0; i < tester.Size(); i++) {
+		if (i == 0) {
+			std::cout << "[" << tester.Get(i) << ", ";
+		}
+		else if (i == (tester.Size() - 1)) {
+			std::cout << tester.Get(i) << "]" << std::endl;
+		}
+		else {
+			std::cout << tester.Get(i) << ", ";
+		}
+	}
+
+	std::cout << "Capacity: " << tester.Capacity() << std::endl; // 16
+	std::cout << "Size: " << tester.Size() << std::endl; // 13
+
+	std::cout << "Bob6 Removed: " << tester.Remove_All("Bob6") << std::endl;
+
+	std::cout << "Capacity: " << tester.Capacity() << std::endl; // 8
+	std::cout << "Size: " << tester.Size() << std::endl; // 8
+}*/
