@@ -2,7 +2,6 @@
 #define ARRAY_LIST_V2_H
 
 #include <ostream>
-#include <iostream>
 
 namespace ssuds {
 	template <class L>
@@ -40,7 +39,7 @@ namespace ssuds {
 			}
 
 			// Unallocate the old array
-			delete[] _data;
+			//delete[] _data;
 
 			// Set the '_data' pointer to 'tempData'
 			_data = tempData;
@@ -67,11 +66,14 @@ namespace ssuds {
 		* Copies arrays for ArrayListV2.
 		******************************************************************************/
 		ArrayListV2(const ArrayListV2& other) {
+			// Copy over the starting values from the cloning array
 			_size = other._size;
 			_capacity = other._capacity;
 
+			// Allocate memory for the new array
 			_data = new L[_capacity];
 
+			// Copy items from the cloning array to the new array
 			for (unsigned int i = 0; i < other._size; i++) {
 				_data[i] = other[i];
 			}
@@ -106,15 +108,6 @@ namespace ssuds {
 		}
 
 		/***************************************************************************//**
-		* @brief Gets the current AVALIABLE slots of the array list.
-		*
-		* @return The current AVALIABLE slots of the list.
-		******************************************************************************/
-		unsigned int Capacity() const {
-			return _capacity;
-		}
-
-		/***************************************************************************//**
 		* @brief Gets the current USED spots of the array list.
 		*
 		* @return The current USED spots of the list.
@@ -124,13 +117,21 @@ namespace ssuds {
 		}
 
 		/***************************************************************************//**
+		* @brief Gets the current AVALIABLE slots of the array list.
+		*
+		* @return The current AVALIABLE slots of the list.
+		******************************************************************************/
+		unsigned int Capacity() const {
+			return _capacity;
+		}
+
+		/***************************************************************************//**
 		* @brief Insert a item at a set position in the array.
 		*
 		* @param s The item to be inserted.
 		* @param position The index for the item to be inserted at.
 		******************************************************************************/
 		void Insert(const L& item, const unsigned int index) {
-		//void Insert(const L& item, unsigned int index) {
 			// Check that index is in range of the array
 			if (index >= 0 && index < _size) {
 				// Check that the array is capable of insertion
@@ -181,24 +182,6 @@ namespace ssuds {
 
 			// Allocate memory for array
 			_data = new L[_capacity];
-		}
-
-		/***************************************************************************//**
-		* @brief Gets a item at a defined index.
-		*
-		* @param index The position of the desired item.
-		*
-		* @return The a referene of the item at position of the index value.
-		******************************************************************************/
-		L& operator[](const unsigned int index) const {
-			// Check that 'index' is in range
-			if (index >= 0 && index < _size) {
-				// Return the irem at position 'index'
-				return _data[index];
-			}
-			else {
-				throw std::out_of_range("Provided position is out of range!");
-			}
 		}
 
 		/***************************************************************************//**
@@ -305,6 +288,24 @@ namespace ssuds {
 		}
 
 		/***************************************************************************//**
+		* @brief Gets a item at a defined index.
+		*
+		* @param index The position of the desired item.
+		*
+		* @return The a referene of the item at position of the index value.
+		******************************************************************************/
+		L& operator[](const unsigned int index) const {
+			// Check that 'index' is in range
+			if (index >= 0 && index < _size) {
+				// Return the irem at position 'index'
+				return _data[index];
+			}
+			else {
+				throw std::out_of_range("Provided position is out of range!");
+			}
+		}
+
+		/***************************************************************************//**
 		* @brief Output the array in a Python like format
 		*
 		* @param os Stream the array should be outputted via.
@@ -314,16 +315,28 @@ namespace ssuds {
 		* @return The array in Python like format via chosen stream.
 		******************************************************************************/
 		friend std::ostream& operator<< (std::ostream& os, const ArrayListV2& a) {
-			for (unsigned int i = 0; i < a.Size(); i++) {
-				if (i == 0) {
-					os << "[" << a[i];
+			// Check if list has items
+			if (a.Size() != 0) {
+				// Output in Python like format
+				for (unsigned int i = 0; i < a.Size(); i++) {
+					if (i == 0) {
+						os << "[" << a[i];
+
+						if (i == (a.Size() - 1)) {
+							os << "]";
+						}
+					}
+					else if (i == (a.Size() - 1)) {
+						os << ", " << a[i] << "]";
+					}
+					else {
+						os << ", " << a[i];
+					}
 				}
-				else if (i == (a.Size() - 1)) {
-					os << ", " << a[i] << "]" << std::endl;
-				}
-				else {
-					os << ", " << a[i];
-				}
+			}
+			else {
+				// Output empty array
+				os << "[]";
 			}
 
 			return os;
@@ -337,9 +350,11 @@ namespace ssuds {
 		* @return The new copy of the array.
 		******************************************************************************/
 		ArrayListV2& operator= (const ArrayListV2& other) {
+			// Copy over the starting values from the cloning array
 			_size = other._size;
 			_capacity = other._capacity;
 
+			// Free up the old data
 			delete[] _data;
 
 			// Allocate memory for the new 'deep-copy'
