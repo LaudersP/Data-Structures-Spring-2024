@@ -1,5 +1,0 @@
-﻿  Application.cpp
-  Array_List.cpp
-C:\Users\Parker Lauders\Desktop\Coding\Data-Structures-Spring-2024\src\Array_List.cpp(216,37): warning C4018: '<': signed/unsigned mismatch
-  Generating Code...
-  Application.vcxproj -> C:\Users\Parker Lauders\Desktop\Coding\Data-Structures-Spring-2024\bin\visual_studio2022\Debug\Application.exe

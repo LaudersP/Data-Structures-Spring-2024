@@ -1,8 +1,0 @@
-﻿  Application.cpp
-  Array_List.cpp
-C:\Users\Parker Lauders\Desktop\Coding\Data-Structures-Spring-2024\src\Array_List.cpp(216,37): warning C4018: '<': signed/unsigned mismatch
-  Generating code
-  Previous IPDB not found, fall back to full compilation.
-  All 202 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
-  Finished generating code
-  Application.vcxproj -> C:\Users\Parker Lauders\Desktop\Coding\Data-Structures-Spring-2024\bin\visual_studio2022\Release\Application.exe
