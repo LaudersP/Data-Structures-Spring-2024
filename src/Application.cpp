@@ -381,5 +381,41 @@ void Tester() {
 }
 
 #elif LAB_NUM == 3
-	// Code here...
+#include <Array_List_v2.hpp>
+
+int main() {
+	ssuds::ArrayListV2<float> f;
+
+	f.Append(1.1f);
+	f.Append(2.2f);
+	f.Append(3.3f);
+
+	// Make an iterator
+	ssuds::ArrayListV2<float>::ArrayListIterator fiter;
+
+	fiter = f.begin();
+
+	// Iterator loop
+	std::cout << "Manual iteration" << std::endl;
+
+	while (fiter != f.end()) {
+		// Get the current values
+		float fval = *fiter;
+		std::cout << "\t" << fval << std::endl;
+
+		// Advance the iterator
+		++fiter;
+	}
+
+	for (int i = 0; i < f.Size(); i++) {
+		std::cout << f[i] << std::endl;
+	}
+
+	// If above works this will too
+	std::cout << "Testing pretty for-each loop" << std::endl;
+
+	for (float temp : f) {
+		std::cout << "\t" << temp << std::endl;
+	}
+}
 #endif
