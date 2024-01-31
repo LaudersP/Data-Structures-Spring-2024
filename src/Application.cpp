@@ -1,6 +1,6 @@
 #include <iostream>
 
-#define LAB_NUM 2
+#define LAB_NUM 3
 
 #if LAB_NUM == 1
 /**
@@ -380,4 +380,6 @@ void Tester() {
 	std::cout << "\Testing Completed!" << std::endl;
 }
 
+#elif LAB_NUM == 3
+	// Code here...
 #endif
