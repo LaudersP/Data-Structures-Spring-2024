@@ -7,6 +7,41 @@ namespace ssuds {
 	template <class L>
 
 	class ArrayListV2 {
+	public:
+		// Nested class for iterator functionality
+		class ArrayListIterator {
+		protected:
+			// Pointer to an ArrayList
+			ArrayListV2* _ptr;
+
+			// Iterator index
+			int _index;
+
+		public:
+			// Iterator instance constructor
+			ArrayListIterator(ArrayList* p, int i) : _ptr(p), _index(i) {
+				// Empty, on purpose
+			}
+
+			// === Operator overloads ===
+			L& operator*() const {
+				// Return current value in iterator
+				return (*_ptr)[_index];
+			}
+
+			ArrayListIterator& operator++() {
+				// The pre-fix version (++iter)
+				++_index;
+				return *this;
+			}
+
+			bool operator!=(const ArrayListIterator& other) {
+				// Return true if we are NOT like 'other'
+				// Return false if we are like 'other'
+				return _index != other._index || _ptr != other._ptr;
+			}
+		};
+
 	protected:
 		/// The number of USED slots in the array
 		unsigned int _size;
@@ -39,7 +74,7 @@ namespace ssuds {
 			}
 
 			// Unallocate the old array
-			//delete[] _data;
+			delete[] _data;
 
 			// Set the '_data' pointer to 'tempData'
 			_data = tempData;
@@ -367,6 +402,26 @@ namespace ssuds {
 			}
 
 			return *this;
+		}
+
+		/***************************************************************************//**
+		* @brief Used to get the beginning of the iterator.
+		*
+		* @return The iterator pointing to the beginning of the ArrayList.
+		******************************************************************************/
+		ArrayListIterator begin() {
+			ArrayListIterator iter(this, 0);
+			return iter;
+		}
+
+		/***************************************************************************//**
+		* @brief Used to get the ending of the iterator.
+		*
+		* @return The iterator pointing to one slot past the end of the ArrayList.
+		******************************************************************************/
+		ArrayListIterator end() {
+			ArrayListIterator iter(this, _size);
+			return iter;
 		}
 	};
 }
