@@ -1,9 +1,13 @@
+#include <iostream>
+
+#define LAB_NUM 1
+
+#if LAB_NUM == 1
 /**
 * fstream referenced from: Sams Teach Yourself C++ (ISBN13: 978-0-13-733468-1, Pages: 672-675)
 * out_of_range exception referenced from: Sams Teach Yourself C++ (ISBN13: 978-0-13-733468-1, Pages: 689-694)
 */
 
-#include <iostream>
 #include <fstream>
 #include <Array_List.h>
 #include <stdexcept>
@@ -319,3 +323,5 @@ void UserOptions() {
 		}
 	} while (!done);
 }
+
+#endif

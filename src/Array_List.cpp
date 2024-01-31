@@ -226,4 +226,6 @@ int ssuds::ArrayList::Remove_All(std::string s) {
 			num_removed++;
 		}
 	}
+
+	return num_removed;
 }
