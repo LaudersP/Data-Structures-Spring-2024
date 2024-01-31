@@ -31,7 +31,7 @@ void ssuds::ArrayList::Append(std::string s) {
 		std::string* tempData = new std::string[_size];
 
 		// Copy over data from the old array
-		for (int i = 0; i < (_size - 1); i++) {
+		for (unsigned int i = 0; i < (_size - 1); i++) {
 			tempData[i] = _data[i];
 		}
 
@@ -73,7 +73,7 @@ void ssuds::ArrayList::Insert(std::string s, const unsigned int index) {
 		// Check that 'index' is greater than 0
 		if (index != 0) {
 			// Loop through the array
-			for (int i = 0; i < _size; i++) {
+			for (unsigned int i = 0; i < _size; i++) {
 				// Copy data from before the insertion index
 				if (i < index) {
 					tempData[i] = _data[i];
@@ -93,7 +93,7 @@ void ssuds::ArrayList::Insert(std::string s, const unsigned int index) {
 			tempData[0] = s;
 
 			// Copy remainder of data
-			for (int i = 1; i < _size; i++) {
+			for (unsigned int i = 1; i < _size; i++) {
 				tempData[i] = _data[i - 1];
 			}
 		}
@@ -137,7 +137,7 @@ int ssuds::ArrayList::Find(std::string s, unsigned int index) const {
 	// Check that 'index' is in range
 	if (index >= 0 && index < _size) {
 		// Loop through the list
-		for (int i = index; i < _size; i++) {
+		for (unsigned int i = index; i < _size; i++) {
 			// Check if the string has been found
 			if (_data[i] == s) {
 				// Return index
@@ -166,7 +166,7 @@ void ssuds::ArrayList::Remove(const unsigned int index) {
 		std::string* tempData = new std::string[_size];
 
 		// Loop through the list
-		for (int i = 0; i < _size + 1; i++) {
+		for (unsigned int i = 0; i < _size + 1; i++) {
 			if (i < index) {
 				tempData[i] = _data[i];
 			}
