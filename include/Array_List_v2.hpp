@@ -18,8 +18,14 @@ namespace ssuds {
 			int _index;
 
 		public:
+			// Default constructor
+			ArrayListIterator() {
+				_ptr = nullptr;
+				_index = NULL;
+			}
+
 			// Iterator instance constructor
-			ArrayListIterator(ArrayList* p, int i) : _ptr(p), _index(i) {
+			ArrayListIterator(ArrayListV2* p, int i) : _ptr(p), _index(i) {
 				// Empty, on purpose
 			}
 
@@ -111,6 +117,31 @@ namespace ssuds {
 			// Copy items from the cloning array to the new array
 			for (unsigned int i = 0; i < other._size; i++) {
 				_data[i] = other[i];
+			}
+		}
+
+		/***************************************************************************//**
+		* @brief Move constructor of ArrayList class.
+		*
+		* Moves an array to another ArrayListV2 instance.
+		******************************************************************************/
+		ArrayListV2(ArrayListV2&& other) : _size(other._size), _capacity(other._capacity), _data(other._data) {
+			// Reset the source object
+			other._size = 0;
+			other._capacity = _capacityMinimum;
+			other._data = new L[_capacity];
+		}
+
+		/***************************************************************************//**
+		* @brief Constructor of ArrayListV2 class with initializer list
+		*
+		* Initializes an ArrayListV2 instance with elements from the provided initializer_list.
+		* Appends each element from the initializer_list to the ArrayListV2.
+		******************************************************************************/
+		ArrayListV2(std::initializer_list<L> initList) : ArrayListV2() {
+			// Initialize the ArrayList with elements from the initializer_list
+			for (const auto& item : initList) {
+				Append(item);
 			}
 		}
 
@@ -421,6 +452,26 @@ namespace ssuds {
 		******************************************************************************/
 		ArrayListIterator end() {
 			ArrayListIterator iter(this, _size);
+			return iter;
+		}
+
+		/***************************************************************************//**
+		* @brief Used to get the reverse iterator pointing to the last element.
+		*
+		* @return The reverse iterator pointing to the last element.
+		******************************************************************************/
+		ArrayListIterator rbegin() {
+			ArrayListIterator iter(this, _size - 1);
+			return iter;
+		}
+
+		/***************************************************************************//**
+		* @brief Used to get the reverse iterator pointing to the position before the first element.
+		*
+		* @return The reverse iterator pointing to the position before the first element.
+		******************************************************************************/
+		ArrayListIterator rend() {
+			ArrayListIterator iter(this, -1);
 			return iter;
 		}
 	};
