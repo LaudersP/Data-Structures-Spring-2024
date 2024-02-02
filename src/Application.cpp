@@ -382,6 +382,7 @@ void Tester() {
 
 #elif LAB_NUM == 3
 #include <Array_List_v2.hpp>
+#include <vector>
 
 int main() {
 	ssuds::ArrayListV2<float> f;
@@ -396,26 +397,31 @@ int main() {
 	fiter = f.begin();
 
 	// Iterator loop
-	std::cout << "Manual iteration" << std::endl;
+	std::cout << "Manual Iteration 1" << std::endl;
 
 	while (fiter != f.end()) {
 		// Get the current values
 		float fval = *fiter;
-		std::cout << "\t" << fval << std::endl;
+		std::cout << fval << std::endl;
 
 		// Advance the iterator
 		++fiter;
 	}
+
+	std::cout << std::endl;
+	std::cout << "Manual Iteration 2" << std::endl;
 
 	for (int i = 0; i < f.Size(); i++) {
 		std::cout << f[i] << std::endl;
 	}
 
 	// If above works this will too
+	std::cout << std::endl;
 	std::cout << "Testing pretty for-each loop" << std::endl;
 
 	for (float temp : f) {
-		std::cout << "\t" << temp << std::endl;
+		std::cout << temp << std::endl;
 	}
+
 }
 #endif
