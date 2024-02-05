@@ -239,15 +239,18 @@ namespace ssuds {
 		* Similar to the destructor but meant to be used during list's lifetime.
 		******************************************************************************/
 		void Clear() {
-			// Unallocate array memory
-			delete[] _data;
+			// Check if '_data' is not null before deleting
+			if (_data != nullptr) {
+				// Unallocate array memory
+				delete[] _data;
+			}
+
+			// Set '_data' to nullptr
+			_data = nullptr;
 
 			// Reset variables to defaule
 			_size = 0;
 			_capacity = _capacityMinimum;
-
-			// Allocate memory for array
-			_data = new L[_capacity];
 		}
 
 		/***************************************************************************//**
@@ -287,7 +290,7 @@ namespace ssuds {
 			// Check that 'index' is in range
 			if (index >= 0 && index < _size) {
 				// Loop from the desired index to the end of the array
-				for (unsigned int i = index; i < _size; i++) {
+				for (unsigned int i = index; i < _size - 1; i++) {
 					// Copy everything one spot left in the array
 					_data[i] = _data[i + 1];
 				}
@@ -471,7 +474,7 @@ namespace ssuds {
 		* @return The reverse iterator pointing to the position before the first element.
 		******************************************************************************/
 		ArrayListIterator rend() {
-			ArrayListIterator iter(this, -1);
+			ArrayListIterator iter(this, 0);
 			return iter;
 		}
 	};
