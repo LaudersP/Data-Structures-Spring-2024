@@ -1,6 +1,6 @@
 #include <iostream>
 
-#define LAB_NUM 3
+#define LAB_NUM -3	// Negative signals testing code
 
 #if LAB_NUM == 1
 /**
@@ -53,8 +53,8 @@ void Tester() {
 	std::cout << tester.Size() << std::endl; // 6
 	std::cout << tester.Get(0) << std::endl; // Bob
 	std::cout << tester.Get(1) << std::endl; // Carl
-	std::cout << tester.Get(2) << std::endl; // Jim
-	std::cout << tester.Get(3) << std::endl; // Sam
+	std::cout << tester.Get(2) << std::endl; // Sam
+	std::cout << tester.Get(3) << std::endl; // Jim
 	std::cout << tester.Get(4) << std::endl; // Susan
 	std::cout << tester.Get(5) << std::endl; // Jim
 
@@ -70,7 +70,7 @@ void Tester() {
 	tester.Remove(0);
 
 	std::cout << std::endl;
-	std::cout << tester.Size() << std::endl; // 4
+	std::cout << tester.Size() << std::endl; // 3
 	std::cout << tester.Get(0) << std::endl; // Carl
 	std::cout << tester.Get(1) << std::endl; // Sam
 	std::cout << tester.Get(2) << std::endl; // Susan
@@ -422,6 +422,14 @@ int main() {
 	for (float temp : f) {
 		std::cout << temp << std::endl;
 	}
-
 }
+#elif LAB_NUM == -3
+#include <Array_List_v2.hpp>
+#include <gtest/gtest.h>
+
+int main() {
+	testing::InitGoogleTest();
+	return RUN_ALL_TESTS();
+}
+
 #endif
