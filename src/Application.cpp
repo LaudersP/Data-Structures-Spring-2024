@@ -1,6 +1,6 @@
 #include <iostream>
 
-#define LAB_NUM 2
+#define LAB_NUM -3	// Negative signals testing code
 
 #if LAB_NUM == 1
 /**
@@ -53,8 +53,8 @@ void Tester() {
 	std::cout << tester.Size() << std::endl; // 6
 	std::cout << tester.Get(0) << std::endl; // Bob
 	std::cout << tester.Get(1) << std::endl; // Carl
-	std::cout << tester.Get(2) << std::endl; // Jim
-	std::cout << tester.Get(3) << std::endl; // Sam
+	std::cout << tester.Get(2) << std::endl; // Sam
+	std::cout << tester.Get(3) << std::endl; // Jim
 	std::cout << tester.Get(4) << std::endl; // Susan
 	std::cout << tester.Get(5) << std::endl; // Jim
 
@@ -70,7 +70,7 @@ void Tester() {
 	tester.Remove(0);
 
 	std::cout << std::endl;
-	std::cout << tester.Size() << std::endl; // 4
+	std::cout << tester.Size() << std::endl; // 3
 	std::cout << tester.Get(0) << std::endl; // Carl
 	std::cout << tester.Get(1) << std::endl; // Sam
 	std::cout << tester.Get(2) << std::endl; // Susan
@@ -378,6 +378,58 @@ void Tester() {
 	std::cout << "Size2: " << FL.Size() << std::endl; // 0
 
 	std::cout << "\Testing Completed!" << std::endl;
+}
+
+#elif LAB_NUM == 3
+#include <Array_List_v2.hpp>
+#include <vector>
+
+int main() {
+	ssuds::ArrayListV2<float> f;
+
+	f.Append(1.1f);
+	f.Append(2.2f);
+	f.Append(3.3f);
+
+	// Make an iterator
+	ssuds::ArrayListV2<float>::ArrayListIterator fiter;
+
+	fiter = f.begin();
+
+	// Iterator loop
+	std::cout << "Manual Iteration 1" << std::endl;
+
+	while (fiter != f.end()) {
+		// Get the current values
+		float fval = *fiter;
+		std::cout << fval << std::endl;
+
+		// Advance the iterator
+		++fiter;
+	}
+
+	std::cout << std::endl;
+	std::cout << "Manual Iteration 2" << std::endl;
+
+	for (int i = 0; i < f.Size(); i++) {
+		std::cout << f[i] << std::endl;
+	}
+
+	// If above works this will too
+	std::cout << std::endl;
+	std::cout << "Testing pretty for-each loop" << std::endl;
+
+	for (float temp : f) {
+		std::cout << temp << std::endl;
+	}
+}
+#elif LAB_NUM == -3
+#include <Array_List_v2.hpp>
+#include <gtest/gtest.h>
+
+int main() {
+	testing::InitGoogleTest();
+	return RUN_ALL_TESTS();
 }
 
 #endif

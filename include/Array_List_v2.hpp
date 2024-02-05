@@ -7,6 +7,47 @@ namespace ssuds {
 	template <class L>
 
 	class ArrayListV2 {
+	public:
+		// Nested class for iterator functionality
+		class ArrayListIterator {
+		protected:
+			// Pointer to an ArrayList
+			ArrayListV2* _ptr;
+
+			// Iterator index
+			int _index;
+
+		public:
+			// Default constructor
+			ArrayListIterator() {
+				_ptr = nullptr;
+				_index = NULL;
+			}
+
+			// Iterator instance constructor
+			ArrayListIterator(ArrayListV2* p, int i) : _ptr(p), _index(i) {
+				// Empty, on purpose
+			}
+
+			// === Operator overloads ===
+			L& operator*() const {
+				// Return current value in iterator
+				return (*_ptr)[_index];
+			}
+
+			ArrayListIterator& operator++() {
+				// The pre-fix version (++iter)
+				++_index;
+				return *this;
+			}
+
+			bool operator!=(const ArrayListIterator& other) {
+				// Return true if we are NOT like 'other'
+				// Return false if we are like 'other'
+				return _index != other._index || _ptr != other._ptr;
+			}
+		};
+
 	protected:
 		/// The number of USED slots in the array
 		unsigned int _size;
@@ -39,7 +80,7 @@ namespace ssuds {
 			}
 
 			// Unallocate the old array
-			//delete[] _data;
+			delete[] _data;
 
 			// Set the '_data' pointer to 'tempData'
 			_data = tempData;
@@ -76,6 +117,31 @@ namespace ssuds {
 			// Copy items from the cloning array to the new array
 			for (unsigned int i = 0; i < other._size; i++) {
 				_data[i] = other[i];
+			}
+		}
+
+		/***************************************************************************//**
+		* @brief Move constructor of ArrayList class.
+		*
+		* Moves an array to another ArrayListV2 instance.
+		******************************************************************************/
+		ArrayListV2(ArrayListV2&& other) : _size(other._size), _capacity(other._capacity), _data(other._data) {
+			// Reset the source object
+			other._size = 0;
+			other._capacity = _capacityMinimum;
+			other._data = new L[_capacity];
+		}
+
+		/***************************************************************************//**
+		* @brief Constructor of ArrayListV2 class with initializer list
+		*
+		* Initializes an ArrayListV2 instance with elements from the provided initializer_list.
+		* Appends each element from the initializer_list to the ArrayListV2.
+		******************************************************************************/
+		ArrayListV2(std::initializer_list<L> initList) : ArrayListV2() {
+			// Initialize the ArrayList with elements from the initializer_list
+			for (const auto& item : initList) {
+				Append(item);
 			}
 		}
 
@@ -173,15 +239,18 @@ namespace ssuds {
 		* Similar to the destructor but meant to be used during list's lifetime.
 		******************************************************************************/
 		void Clear() {
-			// Unallocate array memory
-			delete[] _data;
+			// Check if '_data' is not null before deleting
+			if (_data != nullptr) {
+				// Unallocate array memory
+				delete[] _data;
+			}
+
+			// Set '_data' to nullptr
+			_data = nullptr;
 
 			// Reset variables to defaule
 			_size = 0;
 			_capacity = _capacityMinimum;
-
-			// Allocate memory for array
-			_data = new L[_capacity];
 		}
 
 		/***************************************************************************//**
@@ -221,7 +290,7 @@ namespace ssuds {
 			// Check that 'index' is in range
 			if (index >= 0 && index < _size) {
 				// Loop from the desired index to the end of the array
-				for (unsigned int i = index; i < _size; i++) {
+				for (unsigned int i = index; i < _size - 1; i++) {
 					// Copy everything one spot left in the array
 					_data[i] = _data[i + 1];
 				}
@@ -367,6 +436,46 @@ namespace ssuds {
 			}
 
 			return *this;
+		}
+
+		/***************************************************************************//**
+		* @brief Used to get the beginning of the iterator.
+		*
+		* @return The iterator pointing to the beginning of the ArrayList.
+		******************************************************************************/
+		ArrayListIterator begin() {
+			ArrayListIterator iter(this, 0);
+			return iter;
+		}
+
+		/***************************************************************************//**
+		* @brief Used to get the ending of the iterator.
+		*
+		* @return The iterator pointing to one slot past the end of the ArrayList.
+		******************************************************************************/
+		ArrayListIterator end() {
+			ArrayListIterator iter(this, _size);
+			return iter;
+		}
+
+		/***************************************************************************//**
+		* @brief Used to get the reverse iterator pointing to the last element.
+		*
+		* @return The reverse iterator pointing to the last element.
+		******************************************************************************/
+		ArrayListIterator rbegin() {
+			ArrayListIterator iter(this, _size - 1);
+			return iter;
+		}
+
+		/***************************************************************************//**
+		* @brief Used to get the reverse iterator pointing to the position before the first element.
+		*
+		* @return The reverse iterator pointing to the position before the first element.
+		******************************************************************************/
+		ArrayListIterator rend() {
+			ArrayListIterator iter(this, 0);
+			return iter;
 		}
 	};
 }
