@@ -26,6 +26,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\Array_List.h" />
+    <ClInclude Include="..\..\include\Array_List_Utility.hpp" />
     <ClInclude Include="..\..\include\Array_List_v2.hpp" />
     <ClInclude Include="..\..\include\Foo.hpp" />
   </ItemGroup>
