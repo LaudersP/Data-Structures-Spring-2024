@@ -1,6 +1,6 @@
 #include <iostream>
 
-#define LAB_NUM -3	// Negative signals testing code
+#define LAB_NUM 4	// Negative signals testing code
 
 #if LAB_NUM == 1
 /**
@@ -430,6 +430,37 @@ int main() {
 int main() {
 	testing::InitGoogleTest();
 	return RUN_ALL_TESTS();
+}
+
+#elif LAB_NUM == 4 
+#include <Array_List_v2.hpp>
+#include <Array_List_Utility.hpp>
+#include <iostream>
+
+int main() {
+	ssuds::ArrayListV2<int> a;
+
+	a.Append(1);
+	a.Append(2);
+	a.Append(3);
+	a.Append(4);
+	a.Append(5);
+	a.Append(6);
+	a.Append(7);
+	a.Append(8);
+	a.Append(9);
+	a.Append(10);
+	a.Append(11);
+	a.Append(12);
+	a.Append(13);
+	a.Append(14);
+
+	// "Stock" array
+	std::cout << "Input: " << a << std::endl;
+
+	ssuds::Shuffle(a);
+
+	std::cout << "Output: " << a << std::endl;
 }
 
 #endif
