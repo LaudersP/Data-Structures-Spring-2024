@@ -37,13 +37,12 @@
 *.lai
 *.la
 *.a
-*.lib
 
 # Executables
 *.exe
 *.out
 *.app
 
-# Folders to ignore (Hold class notes)
+# Folders to ignore
 Class Notes/
 temp/
