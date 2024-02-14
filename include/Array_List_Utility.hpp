@@ -2,9 +2,13 @@
 #define ARRAY_LIST_UTILITY_H
 
 #include <Array_List_v2.hpp>
+#include <random>
+
+#include <iostream>
 
 namespace ssuds {
-	enum class SortType {};
+	enum class SortType { ASCENDING, DESCENDING };
+
 	// Function for sorting the array list via quick sort method
 	template <class T>
 	unsigned int QuickSort(ArrayListV2<T>& a) {
@@ -53,10 +57,28 @@ namespace ssuds {
 		// return number of swaps
 	}
 
-	// Function to randomize an array list
+	// Function to randomize an array list using the Fisher-Yates algorithm
 	template <class T>
 	void Shuffle(ArrayListV2<T>& a) {
-		// Implement the Fisher-Yates algorithm
+		// Get the size of the array
+		unsigned int n = a.Size();
+
+		// Seed/prepare the random generator
+		std::default_random_engine generator;
+		std::mt19937 mt(generator); 
+
+		// Shuffle loop
+		for (unsigned int i = n - 1; i > 0; --i) {
+			// Set the random generator ranges
+			std::uniform_int_distribution<unsigned int> distribution(0, i - 1);
+			
+			// Generate random number number
+			unsigned int chosen = distribution(mt);
+
+			// Swap chosen slot with index slot
+			// Reference: https://www.geeksforgeeks.org/swap-in-cpp/?ref=header_search
+			std::swap(a[i], a[chosen]);
+		}
 	}
 }
 
