@@ -1,3 +1,5 @@
+// std::swap() Reference: https://www.geeksforgeeks.org/swap-in-cpp/?ref=header_search
+
 #ifndef ARRAY_LIST_UTILITY_H
 #define ARRAY_LIST_UTILITY_H
 
@@ -53,8 +55,43 @@ namespace ssuds {
 	// Function for sorting the array list via bubble sort method
 	template <class T>
 	unsigned int BubbleSort(ArrayListV2<T>& a) {
-		// Implement here...
-		// return number of swaps
+		// Variable to hold swap status
+		bool swapped = false;
+
+		// Variable to hold the number of swaps preformed
+		unsigned int swapCount = 0;
+
+		// Variable to hold the lenght of the array
+		unsigned int n = a.Size();
+
+		// Perform (n - 1) loops through the list
+		for (unsigned int i = 0; i < (n - 1); i++) {
+			// Reset swap status
+			swapped = false;
+
+			// Check for out-of-place neighbors
+			for (unsigned int j = 0; j < (n - 1 - i); j++) {
+				// Check if swap is needed
+				if (a[j] > a[j + 1]) {
+					// Swap the two elements
+					std::swap(a[j], a[j + 1]);
+
+					// Set swap status
+					swapped = true;
+
+					// Increase swap count
+					++swapCount;
+				}
+			}
+
+			// End sort if all items are sorted
+			// ... swapped will be 'false'
+			if (!swapped) {
+				break;
+			}
+		}
+		
+		return swapCount;
 	}
 
 	// Function to randomize an array list using the Fisher-Yates algorithm
@@ -64,11 +101,11 @@ namespace ssuds {
 		unsigned int n = a.Size();
 
 		// Seed/prepare the random generator
-		std::default_random_engine generator;
-		std::mt19937 mt(generator); 
+		std::random_device generator;
+		std::mt19937 mt(generator()); 
 
 		// Shuffle loop
-		for (unsigned int i = n - 1; i > 0; --i) {
+		for (unsigned int i = n - 1; i > 0; i--) {
 			// Set the random generator ranges
 			std::uniform_int_distribution<unsigned int> distribution(0, i - 1);
 			
@@ -76,9 +113,10 @@ namespace ssuds {
 			unsigned int chosen = distribution(mt);
 
 			// Swap chosen slot with index slot
-			// Reference: https://www.geeksforgeeks.org/swap-in-cpp/?ref=header_search
 			std::swap(a[i], a[chosen]);
 		}
+
+		return;
 	}
 }
 
