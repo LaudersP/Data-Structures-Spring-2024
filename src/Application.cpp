@@ -455,12 +455,14 @@ int main() {
 	a.Append(13);
 	a.Append(14);
 
-	// "Stock" array
-	std::cout << "Input: " << a << std::endl;
-
+	// Test shuffle
 	ssuds::Shuffle(a);
+	std::cout << "Shuffled: " << a << std::endl;
 
-	std::cout << "Output: " << a << std::endl;
+	// Test BubbleSort
+	std::cout << "Swaps: " << ssuds::BubbleSort(a) << std::endl;;
+	std::cout << "Result: " << a << std::endl;
+
+	return 0;
 }
-
 #endif
