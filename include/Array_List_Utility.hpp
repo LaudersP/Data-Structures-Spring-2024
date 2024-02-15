@@ -84,10 +84,15 @@ namespace ssuds {
 
 	// Function for sorting the array list via quick sort method
 	template <class T>
-	void QuickSort(ArrayListV2<T>& a, SortType order, int n, int* swaps) {
+	int QuickSort(ArrayListV2<T>& a, SortType order, int n) {
+		// Variable to hold the number of swaps
+		int swaps = 0;
+
 		// Call the internal recursion function
 		// ... Reason for this is so the user doesnt need to know index range
-		QuickSortRecursion(a, order, 0, n - 1, swaps);
+		QuickSortRecursion(a, order, 0, n - 1, &swaps);
+
+		return swaps;
 	}	
 
 	// Function to randomize an array list
@@ -104,10 +109,11 @@ namespace ssuds {
 		unsigned int left = 0;
 
 		// Variable to hold the right index of the section
-		unsigned int right = n - 1;
+		int right = n - 1;
 
 		// Loop
-		while (left <= right) {
+
+		while (left <= right && right != -1) {
 			// Variable to hold the mid point of the section
 			unsigned int middle = (left + right) / 2;
 
