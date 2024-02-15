@@ -1,6 +1,6 @@
 #include <iostream>
 
-#define LAB_NUM 4	// Negative signals testing code
+#define LAB_NUM -4	// Negative signals testing code
 
 #if LAB_NUM == 1
 /**
@@ -424,7 +424,6 @@ int main() {
 	}
 }
 #elif LAB_NUM == -3
-#include <Array_List_v2.hpp>
 #include <gtest/gtest.h>
 
 int main() {
@@ -509,4 +508,13 @@ int main() {
 
 	return 0;
 }
+
+#elif LAB_NUM == -4
+#include <gtest/gtest.h>
+
+int main() {
+	testing::InitGoogleTest();
+	return RUN_ALL_TESTS();
+}
+
 #endif
