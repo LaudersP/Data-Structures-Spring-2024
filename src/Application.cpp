@@ -455,13 +455,57 @@ int main() {
 	a.Append(13);
 	a.Append(14);
 
+	std::cout << "Start: " << a << std::endl;
+
 	// Test shuffle
 	ssuds::Shuffle(a);
-	std::cout << "Shuffled: " << a << std::endl;
+	std::cout << "Shuffled: " << a << std::endl << std::endl;
 
-	// Test BubbleSort
-	std::cout << "Swaps: " << ssuds::BubbleSort(a) << std::endl;;
-	std::cout << "Result: " << a << std::endl;
+	// Test BubbleSort()
+	std::cout << "BubbleSort (ASCENDING)" << std::endl;
+	std::cout << "------------------------------" << std::endl;
+	std::cout << "Swaps: " << ssuds::BubbleSort(a, ssuds::SortType::ASCENDING) << std::endl;
+	std::cout << "Result: " << a << std::endl << std::endl;
+
+	std::cout << "BubbleSort (DESCENDING)" << std::endl;
+	std::cout << "------------------------------" << std::endl;
+	std::cout << "Swaps: " << ssuds::BubbleSort(a, ssuds::SortType::DESCENDING) << std::endl;
+	std::cout << "Result: " << a << std::endl << std::endl;
+
+	// Test BinarySearch()
+	long int comparisons = 0;
+	std::cout << "BinarySearch (DESENDING)" << std::endl;
+	std::cout << "------------------------------" << std::endl;
+	std::cout << "Searching For: 7, Found: " << ssuds::BinarySearch(a, ssuds::SortType::DESCENDING, 7, &comparisons) << std::endl;
+	std::cout << "Searching For: 11, Found: " << ssuds::BinarySearch(a, ssuds::SortType::DESCENDING, 11, &comparisons) << std::endl;
+	std::cout << "Searching For: 3, Found: " << ssuds::BinarySearch(a, ssuds::SortType::DESCENDING, 3, &comparisons) << std::endl << std::endl;
+
+	comparisons << ssuds::BubbleSort(a, ssuds::SortType::ASCENDING);
+
+	std::cout << "BinarySearch (ASCENDING)" << std::endl;
+	std::cout << "------------------------------" << std::endl;
+	std::cout << "Searching For: 7, Found: " << ssuds::BinarySearch(a, ssuds::SortType::ASCENDING, 7, &comparisons) << std::endl;
+	std::cout << "Searching For: 11, Found: " << ssuds::BinarySearch(a, ssuds::SortType::ASCENDING, 11, &comparisons) << std::endl; 
+	std::cout << "Searching For: 3, Found: " << ssuds::BinarySearch(a, ssuds::SortType::ASCENDING, 3, &comparisons) << std::endl << std::endl;
+
+	// Test QuickSort()
+	std::cout << "QuickSort (ASCENDING)" << std::endl;
+	std::cout << "------------------------------" << std::endl;
+	ssuds::Shuffle(a);
+	std::cout << "Shuffled: " << a << std::endl;
+	int swaps = 0;
+	ssuds::QuickSort(a, ssuds::SortType::ASCENDING, a.Size(), &swaps);
+	std::cout << "Finished: " << a << std::endl;
+	std::cout << "Swaps: " << swaps << std::endl;
+
+	std::cout << "QuickSort (DESCENDING)" << std::endl;
+	std::cout << "------------------------------" << std::endl;
+	ssuds::Shuffle(a);
+	std::cout << "Shuffled: " << a << std::endl;
+	swaps = 0;
+	ssuds::QuickSort(a, ssuds::SortType::DESCENDING, a.Size(), &swaps);
+	std::cout << "Finished: " << a << std::endl;
+	std::cout << "Swaps: " << swaps << std::endl;
 
 	return 0;
 }
