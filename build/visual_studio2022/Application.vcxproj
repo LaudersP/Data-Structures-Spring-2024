@@ -30,6 +30,7 @@
     <ClInclude Include="..\..\include\Array_List_Utility.hpp" />
     <ClInclude Include="..\..\include\Array_List_v2.hpp" />
     <ClInclude Include="..\..\include\Foo.hpp" />
+    <ClInclude Include="..\..\include\Linked_List.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
