@@ -1,6 +1,6 @@
 #include <iostream>
 
-#define LAB_NUM -4	// Negative signals testing code
+#define LAB_NUM 4	// Negative signals testing code
 
 #if LAB_NUM == 1
 /**
@@ -434,79 +434,279 @@ int main() {
 #elif LAB_NUM == 4 
 #include <Array_List_v2.hpp>
 #include <Array_List_Utility.hpp>
+#include <fstream>
 #include <iostream>
+#include <random>
+#include <chrono>
+
+#include <thread>
+
+#define OUTPUT_PATH "../../output/results.csv"
+
+void FillArray(ssuds::ArrayListV2<float>& a, unsigned int slotSize);
+void SaveOutput(std::ofstream& file, const std::chrono::steady_clock::time_point start, const std::chrono::steady_clock::time_point end, const unsigned int numberOfProcesses = 1);
+void GetSamples(ssuds::ArrayListV2<float>& a, ssuds::ArrayListV2<float>& b);
 
 int main() {
-	ssuds::ArrayListV2<int> a;
+	// Open output file
+	std::ofstream outputFile(OUTPUT_PATH);
 
-	a.Append(1);
-	a.Append(2);
-	a.Append(3);
-	a.Append(4);
-	a.Append(5);
-	a.Append(6);
-	a.Append(7);
-	a.Append(8);
-	a.Append(9);
-	a.Append(10);
-	a.Append(11);
-	a.Append(12);
-	a.Append(13);
-	a.Append(14);
+	// Check if the file was opened
+	if (!outputFile.is_open()) {
+		std::cout << "File NOT Opened!" << std::endl;
+		return 1;
+	}
 
-	std::cout << "Start: " << a << std::endl;
+	// Output header labels
+	outputFile << "Size(),StartingVal,ShuffleT,CopyT,QuickSortT,QuickSortO,BubbleSortT,BubbleSortO,BinarySearchT,BinarySearchO,LinearSearchT,LinearSearchO\n";
 
-	// Test shuffle
-	ssuds::Shuffle(a);
-	std::cout << "Shuffled: " << a << std::endl << std::endl;
+	// Automated testing loop
+	for (unsigned int testSize = 1000; testSize <= 500000; testSize += 5000) {
+		// Correct incorrect testSize
+		if (testSize > 1000 && testSize < 10000) {
+			testSize -= 1000;
+		}
 
-	// Test BubbleSort()
-	std::cout << "BubbleSort (ASCENDING)" << std::endl;
-	std::cout << "------------------------------" << std::endl;
-	std::cout << "Swaps: " << ssuds::BubbleSort(a, ssuds::SortType::ASCENDING) << std::endl;
-	std::cout << "Result: " << a << std::endl << std::endl;
+		// Create ArrayList instance
+		ssuds::ArrayListV2<float> al;
 
-	std::cout << "BubbleSort (DESCENDING)" << std::endl;
-	std::cout << "------------------------------" << std::endl;
-	std::cout << "Swaps: " << ssuds::BubbleSort(a, ssuds::SortType::DESCENDING) << std::endl;
-	std::cout << "Result: " << a << std::endl << std::endl;
+		// Generate the ArrayList
+		FillArray(al, testSize);
 
-	// Test BinarySearch()
-	long int comparisons = 0;
-	std::cout << "BinarySearch (DESENDING)" << std::endl;
-	std::cout << "------------------------------" << std::endl;
-	std::cout << "Searching For: 7, Found: " << ssuds::BinarySearch(a, ssuds::SortType::DESCENDING, 7, &comparisons) << std::endl;
-	std::cout << "Searching For: 11, Found: " << ssuds::BinarySearch(a, ssuds::SortType::DESCENDING, 11, &comparisons) << std::endl;
-	std::cout << "Searching For: 3, Found: " << ssuds::BinarySearch(a, ssuds::SortType::DESCENDING, 3, &comparisons) << std::endl << std::endl;
+		// Starting ending variables for all the testings
+		std::chrono::steady_clock::time_point start, end;
 
-	comparisons << ssuds::BubbleSort(a, ssuds::SortType::ASCENDING);
+		// Elasped time variables for all the testings
+		std::chrono::milliseconds elasped;
 
-	std::cout << "BinarySearch (ASCENDING)" << std::endl;
-	std::cout << "------------------------------" << std::endl;
-	std::cout << "Searching For: 7, Found: " << ssuds::BinarySearch(a, ssuds::SortType::ASCENDING, 7, &comparisons) << std::endl;
-	std::cout << "Searching For: 11, Found: " << ssuds::BinarySearch(a, ssuds::SortType::ASCENDING, 11, &comparisons) << std::endl; 
-	std::cout << "Searching For: 3, Found: " << ssuds::BinarySearch(a, ssuds::SortType::ASCENDING, 3, &comparisons) << std::endl << std::endl;
+		// Output Array.Size() 
+		outputFile << al.Size();
 
-	// Test QuickSort()
-	std::cout << "QuickSort (ASCENDING)" << std::endl;
-	std::cout << "------------------------------" << std::endl;
-	ssuds::Shuffle(a);
-	std::cout << "Shuffled: " << a << std::endl;
-	int swaps = 0;
-	ssuds::QuickSort(a, ssuds::SortType::ASCENDING, a.Size(), &swaps);
-	std::cout << "Finished: " << a << std::endl;
-	std::cout << "Swaps: " << swaps << std::endl;
+		// Print Array.Size()
+		std::cout << "(" << al.Size() << ")" << std::endl;
+		std::cout << "------------------------" << std::endl;
 
-	std::cout << "QuickSort (DESCENDING)" << std::endl;
-	std::cout << "------------------------------" << std::endl;
-	ssuds::Shuffle(a);
-	std::cout << "Shuffled: " << a << std::endl;
-	swaps = 0;
-	ssuds::QuickSort(a, ssuds::SortType::DESCENDING, a.Size(), &swaps);
-	std::cout << "Finished: " << a << std::endl;
-	std::cout << "Swaps: " << swaps << std::endl;
+		// Get the starting value
+		float startingValue = al[0];
+
+		// Output the starting value
+		outputFile << "," << startingValue;
+
+		// Second ArrayList to hold greater sample size for searching algorithms
+		ssuds::ArrayListV2<float> sampleData;
+
+		// Get sample
+		GetSamples(al, sampleData);
+
+
+		// ===== Shuffle =====
+		// Print Operation
+		std::cout << "Shuffle:" << std::endl;
+
+		// Get system start time
+		start = std::chrono::steady_clock::now();
+
+		// Perform shuffle
+		ssuds::Shuffle(al);
+
+		// Get system end time
+		end = std::chrono::steady_clock::now();
+
+		// Output info
+		SaveOutput(outputFile, start, end);
+
+
+
+		// ===== Copy =====
+		// Print Operation
+		std::cout << "\nCopy:" << std::endl;
+
+		// Get system start time
+		start = std::chrono::steady_clock::now();
+
+		// Copy ArrayList
+		ssuds::ArrayListV2<float> al2(al);
+
+		// Get system end time
+		end = std::chrono::steady_clock::now();
+
+		// Output info
+		SaveOutput(outputFile, start, end);
+
+		
+
+		// Variable to hold the number of swaps for sorting algorithms
+		unsigned int swaps = 0;
+
+		// ===== QuickSort =====
+		// Print Operation
+		std::cout << "\nQuickSort:" << std::endl;
+
+		// Get system start time
+		start = std::chrono::steady_clock::now();
+
+		// QuickSort the array
+		swaps = ssuds::QuickSort(al, ssuds::SortType::ASCENDING, al.Size());
+
+		// Get system end time
+		end = std::chrono::steady_clock::now();
+
+		// Output info
+		SaveOutput(outputFile, start, end);
+
+		// Output swaps
+		std::cout << "Operations: " << swaps << std::endl;
+		outputFile << "," << swaps;
+
+
+
+		// ===== BubbleSort =====
+		// Print Operation
+		std::cout << "\nBubbleSort:" << std::endl;
+
+		// Get system start time
+		start = std::chrono::steady_clock::now();
+
+		// QuickSort the array
+
+		swaps = ssuds::BubbleSort(al2, ssuds::SortType::ASCENDING);
+
+		// Get system end time
+		end = std::chrono::steady_clock::now();
+
+		// Output info
+		SaveOutput(outputFile, start, end);
+
+		// Output swaps
+		std::cout << "Operations: " << swaps << std::endl;
+		outputFile << "," << swaps;
+
+	
+
+		// Variable to hold number of comparisions for BinarySearch
+		long int comparisons = 0;
+		long int totalComparisons = 0;
+
+		// ===== BinarySearch =====
+		// Print Operation
+		std::cout << "\nBinarySearch:" << std::endl;
+
+		// Get system start time
+		start = std::chrono::steady_clock::now();
+
+		// Find 'startingValue'
+		//ssuds::BinarySearch(al, ssuds::SortType::ASCENDING, startingValue, &comparisons);
+
+		// Find all the sampleData elements for average
+		for (unsigned int i = 0; i < sampleData.Size(); i++) {
+			ssuds::BinarySearch(al, ssuds::SortType::ASCENDING, sampleData[i], &totalComparisons);
+		}
+
+		// Get system end time
+		end = std::chrono::steady_clock::now();
+
+		// Output info
+		SaveOutput(outputFile, start, end, sampleData.Size());
+
+		// Get correct comparisons
+		comparisons = totalComparisons / sampleData.Size();
+
+		// Output swaps
+		std::cout << "Operations: " << comparisons << std::endl;
+		outputFile << "," << comparisons;
+
+
+		// Variable to hold number of comparisions for LinearSearch
+		long int linearComparisons = 0;
+		long int totalLinearComparisons = 0;
+
+		// ===== LinearSearch =====
+		// Print Operation
+		std::cout << "\nLinearSearch:" << std::endl;
+
+		// Get system start time
+		start = std::chrono::steady_clock::now();
+
+		// Find 'startingValue'
+		//unsigned int comparisons2 = al2.Find(startingValue);
+
+		// Find all the sampleData elements for average
+		for (unsigned int i = 0; i < sampleData.Size(); i++) {
+			totalLinearComparisons += al2.Find(sampleData[i]);
+		}
+
+		// Get system end time
+		end = std::chrono::steady_clock::now();
+
+		// Output info
+		SaveOutput(outputFile, start, end, sampleData.Size());
+
+		// Get correct comparisons
+		linearComparisons = totalLinearComparisons / sampleData.Size();
+
+		// Output swaps
+		std::cout << "Operations: " << linearComparisons << std::endl;
+		outputFile << "," << linearComparisons;
+
+
+		outputFile << "\n";
+		std::cout << std::endl;
+
+	}
+
+	outputFile.close();
 
 	return 0;
+}
+
+void FillArray(ssuds::ArrayListV2<float>& a, unsigned int slotSize) {
+	// Seed/prepare the random generator
+	std::random_device generator;
+	std::mt19937 mt(generator());
+
+	// Set the random generator ranges
+	std::uniform_real_distribution<float> distribution(0.0f, 1.0f);
+
+	// Fill with desired number of elements
+	for (unsigned int i = 0; i < slotSize; i++) {
+		// Generate float
+		float randomized = distribution(mt);
+
+		// Append to list
+		a.Append(randomized);
+	}
+}
+
+void GetSamples(ssuds::ArrayListV2<float>& a, ssuds::ArrayListV2<float>& b) {
+	// Get the size of the original array
+	unsigned int n = a.Size();
+
+	// Grab 25 percent of that size
+	unsigned int sampleSize = n * 0.25;
+
+	// Loop though the front 'sampleSize' of elements
+	for (unsigned int i = 0; i < sampleSize; i++) {
+		b.Append(a[i]);
+	}
+}
+
+void SaveOutput(std::ofstream& file, const std::chrono::steady_clock::time_point start, const std::chrono::steady_clock::time_point end, const unsigned int numberOfProcesses) {
+	std::chrono::milliseconds elasped;
+
+	// Calculate time
+	elasped = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+	unsigned long int numMs = elasped.count();
+
+	std::cout << "TIME: " << elasped.count() << std::endl;
+
+	// Check if more than one process was during 'elasped' time
+	if (numberOfProcesses != 1) {
+		numMs /= numberOfProcesses;
+	}
+
+	// Output results
+	std::cout << "Completed in: " << numMs << " ms" << std::endl;
+	file << "," << numMs;
 }
 
 #elif LAB_NUM == -4
