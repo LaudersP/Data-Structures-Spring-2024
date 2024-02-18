@@ -1,6 +1,6 @@
 #include <iostream>
 
-#define LAB_NUM 4	// Negative signals testing code
+#define LAB_NUM 5	// Negative signals testing code
 
 #if LAB_NUM == 1
 /**
@@ -715,6 +715,32 @@ void SaveOutput(std::ofstream& file, const std::chrono::steady_clock::time_point
 int main() {
 	testing::InitGoogleTest();
 	return RUN_ALL_TESTS();
+}
+
+
+#elif LAB_NUM == 5
+#include <Linked_List.hpp>
+#include <iostream>
+
+int main() {
+	ssuds::LinkedList<int> LL;
+
+	LL.Append(1);
+	LL.Append(2);
+	LL.Append(3);
+	LL.Append(4);
+	LL.Append(5);
+	LL.Append(6);
+	LL.Append(7);
+	LL.Prepend(0);
+	LL.Prepend(-1);
+	LL.Prepend(-2);
+	LL.Prepend(-3);
+	LL.Prepend(-4);
+
+	std::cout << LL << std::endl;
+
+	std::cout << "Size: " << LL.Size() << std::endl;
 }
 
 #endif
