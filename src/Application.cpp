@@ -1,6 +1,6 @@
 #include <iostream>
 
-#define LAB_NUM 4	// Negative signals testing code
+#define LAB_NUM -5	// Negative signals testing code
 
 #if LAB_NUM == 1
 /**
@@ -710,6 +710,70 @@ void SaveOutput(std::ofstream& file, const std::chrono::steady_clock::time_point
 }
 
 #elif LAB_NUM == -4
+#include <gtest/gtest.h>
+
+int main() {
+	testing::InitGoogleTest();
+	return RUN_ALL_TESTS();
+}
+
+
+#elif LAB_NUM == 5
+#include <Linked_List.hpp>
+#include <iostream>
+
+int main() {
+	ssuds::LinkedList<int> LL;
+
+	LL.Append(1);
+	LL.Append(2);
+	LL.Append(3);
+	LL.Append(4);
+	LL.Append(5);
+	LL.Append(7);
+
+	LL.Prepend(0);
+	LL.Prepend(-1);
+	LL.Prepend(-2);
+	LL.Prepend(-4);
+
+	LL.Insert(1, -3);
+	LL.Insert(10, 6);
+
+	std::cout << "Original LinkedList: " << LL << std::endl;
+
+	std::cout << "Size: " << LL.Size() << std::endl;
+
+	// ===== Iterator testing ===== 
+
+	// Test iteration (forward)
+	std::cout << "Iterating forward:";
+	for (int temp : LL) {
+		std::cout << temp << " ";
+	}
+	std::cout << std::endl;
+
+	// Test iteration backward
+	std::cout << "Iterating backward: ";
+	for (ssuds::LinkedList<int>::LinkedListIterator i = LL.rbegin(); i != LL.rend(); --i) {
+		std::cout << *i << " ";
+	}
+	std::cout << std::endl;
+
+	ssuds::LinkedList<int>::LinkedListIterator results = LL.Find(-3);
+
+	if (results != LL.end()) {
+		std::cout << "Element: -3, Found at: " << results.Index() << std::endl;
+	}
+
+	results = LL.Find(6);
+
+	if (results != LL.rend()) {
+		std::cout << "Element: 6, Found at: " << results.Index() << std::endl;
+	}
+}
+
+#elif LAB_NUM == -5 
 #include <gtest/gtest.h>
 
 int main() {
