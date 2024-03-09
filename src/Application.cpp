@@ -1,6 +1,6 @@
 #include <iostream>
 
-#define LAB_NUM -5	// Negative signals testing code
+#define LAB_NUM 6	// Negative signals testing code
 
 #if LAB_NUM == 1
 /**
@@ -779,6 +779,30 @@ int main() {
 int main() {
 	testing::InitGoogleTest();
 	return RUN_ALL_TESTS();
+}
+
+
+#elif LAB_NUM == 6
+#include <SFML/Graphics.hpp>
+
+int main() {
+	sf::RenderWindow window(sf::VideoMode(200, 200), "SFML Works!");
+	sf::CircleShape shape(100.f);
+	shape.setFillColor(sf::Color::Green);
+
+	while (window.isOpen()) {
+		sf::Event event;
+		while (window.pollEvent(event)) {
+			if (event.type == sf::Event::Closed)
+				window.close();
+		}
+
+		window.clear();
+		window.draw(shape);
+		window.display();
+	}
+
+	return 0;
 }
 
 #endif
