@@ -157,8 +157,12 @@ namespace ssuds {
 			*
 			* @return The index.
 			******************************************************************************/
-			unsigned int Index() {
+			unsigned int Index() const{
 				return _index;
+			}
+
+			_Node* Pointer() const {
+				return _ptr;
 			}
 		};
 		/***************************************************************************//**
@@ -497,6 +501,61 @@ namespace ssuds {
 			}
 
 			return end();
+		}
+
+		/***************************************************************************//**
+		* @brief Used to remove an element from the LinkedList.
+		*
+		* @param spot The index pointing to the element.
+		******************************************************************************/
+		LinkedListIterator Remove(const LinkedListIterator& spot) {
+			// Check that the list isn't empty
+			if (_size == 0) {
+				return end();
+			}
+
+			_Node* current = spot.Pointer();
+			LinkedListIterator next_iter = spot;
+			++next_iter;
+
+			// Check if removing the first node
+			if (current == _start) {
+				_start = current->_next;
+
+				if (_start)
+					_start->_prev = nullptr;
+				else
+					_end = nullptr;
+
+				delete current;
+				_size--;
+
+				return next_iter;
+			}
+			// Check if removing the last node
+			else if (current == _end) {
+				_end = current->_prev;
+				_end->_next = nullptr;
+
+				delete current;
+
+				_size--;
+
+				return end();
+			}
+			// Removing from the middle
+			else {
+				current->_prev->_next = current->_next;
+				current->_next->_prev = current->_prev;
+
+				delete current;
+
+				_size--;
+
+				return next_iter;
+			}
+
+			return spot;
 		}
 	};
 }
