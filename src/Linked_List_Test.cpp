@@ -94,4 +94,32 @@ TEST_F(LinkedListTestFixture1, IteratorFind) {
 	ASSERT_EQ(results.Index(), intTester.end().Index());
 }
 
+TEST_F(LinkedListTestFixture1, Remove) {
+	ASSERT_EQ(intTester.Size(), 6);
+
+	// Remove 2
+	ssuds::LinkedList<int>::LinkedListIterator results = intTester.Find(2);
+	ASSERT_EQ(results.Index(), 1);
+	intTester.Remove(results);
+	ASSERT_EQ(intTester.Size(), 5);
+
+	// Remove 1
+	results = intTester.Find(1);
+	ASSERT_EQ(results.Index(), 0);
+	intTester.Remove(results);
+	ASSERT_EQ(intTester.Size(), 4);
+
+	// Remove 6
+	results = intTester.Find(6);
+	ASSERT_EQ(results.Index(), 3);
+	intTester.Remove(results);
+	ASSERT_EQ(intTester.Size(), 3);
+
+	// Check that order is kept as expected
+	for (int temp : intTester)
+		oss << temp << " ";
+
+	EXPECT_EQ(oss.str(), "3 4 5 ");
+}
+
 #endif
