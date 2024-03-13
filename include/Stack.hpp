@@ -14,6 +14,11 @@ namespace ssuds {
 		// Iterator 
 		using Iterator = typename LinkedList<T>::LinkedListIterator;
 	public:
+		// Carry over LinkedList functions
+		using LinkedList<T>::Size;
+		using LinkedList<T>::Clear;
+
+		// Destructor
 		~Stack() {
 			Clear();
 		}
@@ -52,18 +57,6 @@ namespace ssuds {
 		// Function to check if stack is empty
 		bool Empty() const {
 			return _list.Size() == 0 ? true : false;
-		}
-
-		// Function to return stack size 
-		unsigned int Size() const {
-			return _list.Size();
-		}
-
-		// Function to remove all stack items
-		void Clear() {
-			while (!Empty()) {
-				Pop();
-			}
 		}
 	};
 }

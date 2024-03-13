@@ -7,6 +7,11 @@ namespace ssuds {
 	template <class T>
 	class Queue : private LinkedList<T> {
 	public:
+		// Carry over LinkedList functions
+		using LinkedList<T>::Size;
+		using LinkedList<T>::Clear;
+
+		// Destructor
 		~Queue() {
 			Clear();
 		}
@@ -37,17 +42,6 @@ namespace ssuds {
 		// Function to check if stack is empty
 		bool Empty() const {
 			return this->Size() == 0 ? true : false;
-		}
-
-		// Function to return queue size 
-		unsigned int Size() const {
-			return LinkedList<T>::Size();
-		}
-
-		// Function to remove all queue items
-		void Clear() {
-			while (!Empty())
-				dequeue();
 		}
 	};
 }
