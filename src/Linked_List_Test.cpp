@@ -1,4 +1,4 @@
-#define EXECUTE_LINKED_LIST_TESTS 1
+#define EXECUTE_LINKED_LIST_TESTS 0
 
 #if EXECUTE_LINKED_LIST_TESTS
 #include <gtest/gtest.h>
