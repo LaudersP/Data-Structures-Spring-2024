@@ -1,3 +1,5 @@
 #include <TextCircle.hpp>
 
-// Code here...
+TextCircle::TextCircle(sf::Font& font) : _font(font) {
+	_text.setFont(font);
+}
