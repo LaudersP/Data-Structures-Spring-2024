@@ -1,6 +1,6 @@
 #include <iostream>
 
-#define LAB_NUM 0	// 0 Runs GoogleTest
+#define LAB_NUM 6	// 0 Runs GoogleTest
 
 #if LAB_NUM == 0
 #include <gtest/gtest.h>
@@ -772,22 +772,36 @@ int main() {
 
 #elif LAB_NUM == 6
 #include <SFML/Graphics.hpp>
-#include <Stack.hpp>
+#include <WordDrawer.hpp>
 
 int main() {
-	sf::RenderWindow window(sf::VideoMode(200, 200), "SFML Works!");
-	sf::CircleShape shape(100.f);
-	shape.setFillColor(sf::Color::Green);
+	// Window object
+	sf::RenderWindow window(sf::VideoMode(1200, 800), "Lab06");
 
+	// Create font object and load font file to it
+	sf::Font circle_font;
+	if (!circle_font.loadFromFile("../../media/fonts/stars-mounth/Stars-Mouth.ttf"))
+		std::cout << "ERROR: Cannot open font file!\n";
+
+	// WordDrawer object
+	WordDrawer WD("../../media/SCOWL/final/american-words.80", circle_font);
+
+	// Run the program as long as the window is open
 	while (window.isOpen()) {
+		// Event holder
 		sf::Event event;
+
+		// Check window events
 		while (window.pollEvent(event)) {
+			// Check if "close requested", close window
 			if (event.type == sf::Event::Closed)
 				window.close();
 		}
+		
+		// Clear the windoe with black color
+		window.clear(sf::Color::Black);
 
-		window.clear();
-		window.draw(shape);
+		// End the current frame
 		window.display();
 	}
 
