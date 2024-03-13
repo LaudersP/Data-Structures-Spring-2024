@@ -27,6 +27,8 @@
     <ClCompile Include="..\..\src\Linked_List_Test.cpp" />
     <ClCompile Include="..\..\src\Queue_Tests.cpp" />
     <ClCompile Include="..\..\src\Stack_Tests.cpp" />
+    <ClCompile Include="..\..\src\TextCircle.cpp" />
+    <ClCompile Include="..\..\src\WordDrawer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\Array_List.h" />
@@ -36,6 +38,8 @@
     <ClInclude Include="..\..\include\Linked_List.hpp" />
     <ClInclude Include="..\..\include\Queue.hpp" />
     <ClInclude Include="..\..\include\Stack.hpp" />
+    <ClInclude Include="..\..\include\TextCircle.hpp" />
+    <ClInclude Include="..\..\include\WordDrawer.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
