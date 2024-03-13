@@ -1,5 +1,5 @@
-#ifndef QUEUE_H
-#define QUEUE_H
+#ifndef QUEUE_HPP
+#define QUEUE_HPP
 
 #include <Linked_List.hpp>
 
@@ -7,8 +7,9 @@ namespace ssuds {
 	template <class T>
 	class Queue : private LinkedList<T> {
 	public:
-		// Iterator 
-		using Iterator = typename LinkedList<T>::LinkedListIterator;
+		~Queue() {
+			Clear();
+		}
 
 		// Adds element to the end of queue
 		void enqueue(const T& new_val) {
@@ -19,7 +20,7 @@ namespace ssuds {
 		void dequeue() {
 			// Check if the queue is empty
 			if (Empty()) 
-				throw std::out_of_range("ERROR) Queue is empty, cannont remove front element!");
+				throw std::out_of_range("ERROR: Queue is empty, cannot remove front element!");
 
 			this->Remove(this->begin());
 		}
@@ -28,17 +29,25 @@ namespace ssuds {
 		T& Top() const {
 			// Check if the queue is empty
 			if (Empty()) 
-				throw std::out_of_range("ERROR) Queue is empty, cannont access front element!");
+				throw std::out_of_range("ERROR: Queue is empty, cannot access front element!");
 
-			return _start->_data;
+			return *(this->begin());
 		}
 
 		// Function to check if stack is empty
-		void Empty() const {
-			if (this->Size() == 0)
-				return true;
-			else
-				return false;
+		bool Empty() const {
+			return this->Size() == 0 ? true : false;
+		}
+
+		// Function to return queue size 
+		unsigned int Size() const {
+			return LinkedList<T>::Size();
+		}
+
+		// Function to remove all queue items
+		void Clear() {
+			while (!Empty())
+				dequeue();
 		}
 	};
 }
