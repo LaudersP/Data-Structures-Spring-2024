@@ -1,8 +1,17 @@
 #include <iostream>
 
-#define LAB_NUM 6	// Negative signals testing code
+#define LAB_NUM 0	// 0 Runs GoogleTest
 
-#if LAB_NUM == 1
+#if LAB_NUM == 0
+#include <gtest/gtest.h>
+
+int main() {
+	testing::InitGoogleTest();
+	return RUN_ALL_TESTS();
+}
+
+
+#elif LAB_NUM == 1
 /**
 * fstream referenced from: Sams Teach Yourself C++ (ISBN13: 978-0-13-733468-1, Pages: 672-675)
 * out_of_range exception referenced from: Sams Teach Yourself C++ (ISBN13: 978-0-13-733468-1, Pages: 689-694)
@@ -380,6 +389,7 @@ void Tester() {
 	std::cout << "\Testing Completed!" << std::endl;
 }
 
+
 #elif LAB_NUM == 3
 #include <Array_List_v2.hpp>
 #include <vector>
@@ -423,13 +433,7 @@ int main() {
 		std::cout << temp << std::endl;
 	}
 }
-#elif LAB_NUM == -3
-#include <gtest/gtest.h>
 
-int main() {
-	testing::InitGoogleTest();
-	return RUN_ALL_TESTS();
-}
 
 #elif LAB_NUM == 4 
 #include <Array_List_v2.hpp>
@@ -709,14 +713,6 @@ void SaveOutput(std::ofstream& file, const std::chrono::steady_clock::time_point
 	file << "," << numMs;
 }
 
-#elif LAB_NUM == -4
-#include <gtest/gtest.h>
-
-int main() {
-	testing::InitGoogleTest();
-	return RUN_ALL_TESTS();
-}
-
 
 #elif LAB_NUM == 5
 #include <Linked_List.hpp>
@@ -773,17 +769,10 @@ int main() {
 	}
 }
 
-#elif LAB_NUM == -5 
-#include <gtest/gtest.h>
-
-int main() {
-	testing::InitGoogleTest();
-	return RUN_ALL_TESTS();
-}
-
 
 #elif LAB_NUM == 6
 #include <SFML/Graphics.hpp>
+#include <Stack.hpp>
 
 int main() {
 	sf::RenderWindow window(sf::VideoMode(200, 200), "SFML Works!");
