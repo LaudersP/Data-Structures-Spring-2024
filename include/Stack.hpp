@@ -6,24 +6,45 @@
 namespace ssuds {
 	template <class T>
 	class Stack {
+	// Attributes
 	protected:
-		LinkedList<t> _list;
+		// LinkedList object
+		LinkedList<T> _list;
 
+		// Iterator 
+		using Iterator = typename LinkedList<T>::LinkedListIterator;
 	public:
+		typename LinkedList<T>::LinkedListIterator begin() {
+			return _list.begin();
+		}
+
+		typename LinkedList<T>::LinkedListIterator end() {
+			return _list.end();
+		}
+
+	// Functions
+	public:
+		// Function to add an item to the top of stack
 		void Push(const T& new_val) {
 			_list.Prepend(new_val);
 		}
 
-		void Pop(const T& val) {
-			// Remove from the stack
+		// Function to remove an item from the top of stack
+		void Pop() {
+			_list.remove(_list.begin());
 		}
 
-		void Top() {
+		// Function to get the top element without removing it
+		T& Top() {
 			// Get the top element, without removing it
 		}
 
+		// Function to check if stack is empty
 		void Empty() {
-			// Return true if empty
+			if (_list.Size() == 0)
+				return true;
+			else
+				return false;
 		}
 	};
 }
