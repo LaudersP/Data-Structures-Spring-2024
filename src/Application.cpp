@@ -772,7 +772,8 @@ int main() {
 
 #elif LAB_NUM == 6
 #include <SFML/Graphics.hpp>
-#include <WordDrawer.hpp>
+//#include <WordDrawer.hpp>
+#include <TextCircle.hpp>
 
 int main() {
 	// Window object
@@ -784,7 +785,10 @@ int main() {
 		std::cout << "ERROR: Cannot open font file!\n";
 
 	// WordDrawer object
-	WordDrawer WD("../../media/SCOWL/final/american-words.80", circle_font);
+	//WordDrawer WD("../../media/SCOWL/final/american-words.80", circle_font);
+
+	// TextCircle object
+	TextCircle textCircle1(circle_font, "Hello, World!", 300, 400);
 
 	// Run the program as long as the window is open
 	while (window.isOpen()) {
@@ -800,6 +804,9 @@ int main() {
 		
 		// Clear the windoe with black color
 		window.clear(sf::Color::Black);
+
+		// =====
+		window.draw(textCircle1);
 
 		// End the current frame
 		window.display();
