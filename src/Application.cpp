@@ -772,7 +772,7 @@ int main() {
 
 #elif LAB_NUM == 6
 #include <SFML/Graphics.hpp>
-//#include <WordDrawer.hpp>
+#include <WordDrawer.hpp>
 #include <TextCircle.hpp>
 
 int main() {
@@ -785,7 +785,7 @@ int main() {
 		std::cout << "ERROR: Cannot open font file!\n";
 
 	// WordDrawer object
-	//WordDrawer WD("../../media/SCOWL/final/american-words.80", circle_font);
+	WordDrawer WD("../../media/SCOWL/final/american-words.80", circle_font);
 
 	// TextCircle object
 	TextCircle textCircle1(circle_font, "Hello, World!", 300, 400);
@@ -800,6 +800,17 @@ int main() {
 			// Check if "close requested", close window
 			if (event.type == sf::Event::Closed)
 				window.close();
+
+			if (event.type == sf::Event::MouseButtonPressed) {
+				if (event.mouseButton.button == sf::Mouse::Left) {
+					// Code to get/remove the next word in queue
+
+					// Code to create text circl
+					
+					// Refill the queue
+					WD.FillQueue();
+				}
+			}
 		}
 		
 		// Clear the windoe with black color
