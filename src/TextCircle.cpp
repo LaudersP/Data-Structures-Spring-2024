@@ -6,10 +6,14 @@
 
 #include <TextCircle.hpp>
 
-TextCircle::TextCircle(const sf::Font& font, const std::string text,
-						const float x, const float y) : _font(font), _circleX(x), _circleY(y) {
+sf::Font TextCircle::circle_font;
+
+TextCircle::TextCircle() {
+}
+
+TextCircle::TextCircle(const std::string text,
+						const float x, const float y) : _circleX(x), _circleY(y) {
 	// Initialize attributes
-	_text.setFont(font);
 	_text.setString(text);
 	_text.setCharacterSize(_fontSize);
 	_text.setFillColor(sf::Color::Black);
@@ -18,6 +22,7 @@ TextCircle::TextCircle(const sf::Font& font, const std::string text,
 	CreateCircle();
 }
 
+// Function to get the center of the text field
 void TextCircle::CenterText() {
 	// Get the boundary of the text
 	_textBounds = _text.getLocalBounds();
@@ -27,6 +32,7 @@ void TextCircle::CenterText() {
 					_textBounds.top + _textBounds.height / 2.0f);
 }
 
+// Function to create a SFML circle
 void TextCircle::CreateCircle() {
 	// Center the text
 	CenterText();
@@ -51,6 +57,7 @@ void TextCircle::CreateCircle() {
 	_text.setPosition(_circle.getPosition());
 }
 
+// Function to randomize a SFML color
 sf::Color TextCircle::RandomColor() {
 	// Seed the generator
 	srand(time(NULL));
@@ -63,15 +70,19 @@ sf::Color TextCircle::RandomColor() {
 	return sf::Color(r, g, b);
 }
 
+// Random value from 0 to 255
 int TextCircle::Randomize() {
 	return rand() % 256;
 }
 
+// Draw override function
 void TextCircle::draw(sf::RenderTarget& window, sf::RenderStates states) const {
 	window.draw(_circle);
 	window.draw(_text);
 }
 
+// Function to check if a circle is already there
+// .. True if circle is there, false if not
 bool TextCircle::Contains(const sf::Vector2f& point) const {
 	// Get the distance between the x and y cords
 	float sideX = point.x - _circle.getPosition().x;
@@ -82,4 +93,29 @@ bool TextCircle::Contains(const sf::Vector2f& point) const {
 
 	// Return if the point is within the circle
 	return distance <= _circleRadius;
+}
+
+// Equla operator
+TextCircle& TextCircle::operator=(const TextCircle& other) {
+	// Check that they are different
+	if (this != &other) {
+		_text = other._text;
+		_circle = other._circle;
+		_circleX = other._circleX;
+		_circleY = other._circleY;
+		_circleRadius = other._circleRadius;
+		_textBounds = other._textBounds;
+		_circleRadius = other._circleRadius;
+
+		_text.setFont(circle_font);
+
+		CreateCircle();
+	}
+
+	return *this;
+}
+
+void TextCircle::setPosition(float x, float y) {
+	_circle.setPosition(x, y);
+	_text.setPosition(x, y);
 }
