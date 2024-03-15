@@ -774,21 +774,34 @@ int main() {
 #include <SFML/Graphics.hpp>
 #include <WordDrawer.hpp>
 #include <TextCircle.hpp>
+#include <Linked_List.hpp>
 
 int main() {
 	// Window object
 	sf::RenderWindow window(sf::VideoMode(1200, 800), "Lab06");
 
 	// Create font object and load font file to it
-	sf::Font circle_font;
-	if (!circle_font.loadFromFile("../../media/fonts/stars-mounth/Stars-Mouth.ttf"))
+	if (!TextCircle::circle_font.loadFromFile("../../media/fonts/stars-mounth/Stars-Mouth.ttf"))
 		std::cout << "ERROR: Cannot open font file!\n";
 
 	// WordDrawer object
-	WordDrawer WD("../../media/SCOWL/final/american-words.80", circle_font);
+	WordDrawer WD("../../media/SCOWL/final/american-words.80", TextCircle::circle_font);
 
-	// TextCircle object
-	TextCircle textCircle1(circle_font, "Hello, World!", 300, 400);
+	// LinkedList object
+	// .. List of all placed circles
+	ssuds::LinkedList<TextCircle> circles;
+
+	// Moving circle object
+	TextCircle movingCircle;
+	bool isMoving = false;
+	std::string word;
+
+	// User detail message
+	sf::Text userMessage;
+	userMessage.setFont(TextCircle::circle_font);
+	userMessage.setCharacterSize(24);
+	userMessage.setFillColor(sf::Color::White);
+	userMessage.setString("Left-click on empty spot!");
 
 	// Run the program as long as the window is open
 	while (window.isOpen()) {
@@ -801,23 +814,78 @@ int main() {
 			if (event.type == sf::Event::Closed)
 				window.close();
 
+			// Chec if a circle placement is needed
 			if (event.type == sf::Event::MouseButtonPressed) {
+				// Left click
 				if (event.mouseButton.button == sf::Mouse::Left) {
-					// Code to get/remove the next word in queue
-
-					// Code to create text circl
-					
-					// Refill the queue
+					// Ensure the queue is full
 					WD.FillQueue();
+					 
+					// Coordinates of the mouse click 
+					sf::Vector2f circlePos(event.mouseButton.x, event.mouseButton.y);
+
+					// Variable to store overlap status
+					bool overlap = false;
+
+					// Check for overlap with existing circles
+					for (TextCircle& circle : circles) {
+						if (circle.Contains(circlePos)) {
+							overlap = true;
+							break;
+						}
+					}
+
+					if(!isMoving)
+						word = WD.GetWord();
+
+					// Check if circle is not overlapping
+					if (!overlap) {
+						// Check if circle needs to be moving
+						if (!isMoving) {
+							userMessage.setString("Move to desired location. Left-click to place, Right-click to discard!");
+							movingCircle = TextCircle(word, event.mouseButton.x, event.mouseButton.y);
+							isMoving = true;
+						}
+						// Place circle
+						else {
+							userMessage.setString("Left-click on empty spot!");
+							circles.Append(TextCircle(word, event.mouseButton.x, event.mouseButton.y));
+							isMoving = false;
+						}
+					}
+				}
+
+				// Right click
+				if (event.mouseButton.button == sf::Mouse::Right) {
+					userMessage.setString("Left-click on empty spot!");
+
+					// Clear circle
+					if (isMoving) {
+						isMoving = false;
+					}
 				}
 			}
 		}
+
+		// Keep track of mouse
+		if (isMoving) {
+			sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
+			movingCircle.setPosition(static_cast<float>(mousePosition.x), static_cast<float>(mousePosition.y));
+		}
 		
-		// Clear the windoe with black color
+		// Clear the window with black color
 		window.clear(sf::Color::Black);
 
-		// =====
-		window.draw(textCircle1);
+
+		// Draw moving circle
+		if (isMoving)
+			window.draw(movingCircle);
+
+		// Draw circles
+		for (TextCircle& circle : circles)
+			window.draw(circle);
+
+		window.draw(userMessage);
 
 		// End the current frame
 		window.display();
