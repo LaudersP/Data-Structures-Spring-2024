@@ -28,3 +28,11 @@ void WordDrawer::FillQueue() {
 			_wordQueue.enqueue(line);
 	}
 }
+
+std::string WordDrawer::GetWord() {
+	std::string word = _wordQueue.Top();
+
+	_wordQueue.dequeue();
+
+	return word;
+}

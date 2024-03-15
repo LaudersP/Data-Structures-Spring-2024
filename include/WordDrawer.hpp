@@ -20,6 +20,7 @@ public:
 	WordDrawer(const std::string& wordListPath, const sf::Font& font);
 	~WordDrawer();
 	void FillQueue();
+	std::string GetWord();
 };
 
 #endif
