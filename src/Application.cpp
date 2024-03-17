@@ -1,8 +1,17 @@
 #include <iostream>
 
-#define LAB_NUM -5	// Negative signals testing code
+#define LAB_NUM 6	// 0 Runs GoogleTest
 
-#if LAB_NUM == 1
+#if LAB_NUM == 0
+#include <gtest/gtest.h>
+
+int main() {
+	testing::InitGoogleTest();
+	return RUN_ALL_TESTS();
+}
+
+
+#elif LAB_NUM == 1
 /**
 * fstream referenced from: Sams Teach Yourself C++ (ISBN13: 978-0-13-733468-1, Pages: 672-675)
 * out_of_range exception referenced from: Sams Teach Yourself C++ (ISBN13: 978-0-13-733468-1, Pages: 689-694)
@@ -380,6 +389,7 @@ void Tester() {
 	std::cout << "\Testing Completed!" << std::endl;
 }
 
+
 #elif LAB_NUM == 3
 #include <Array_List_v2.hpp>
 #include <vector>
@@ -423,13 +433,7 @@ int main() {
 		std::cout << temp << std::endl;
 	}
 }
-#elif LAB_NUM == -3
-#include <gtest/gtest.h>
 
-int main() {
-	testing::InitGoogleTest();
-	return RUN_ALL_TESTS();
-}
 
 #elif LAB_NUM == 4 
 #include <Array_List_v2.hpp>
@@ -709,14 +713,6 @@ void SaveOutput(std::ofstream& file, const std::chrono::steady_clock::time_point
 	file << "," << numMs;
 }
 
-#elif LAB_NUM == -4
-#include <gtest/gtest.h>
-
-int main() {
-	testing::InitGoogleTest();
-	return RUN_ALL_TESTS();
-}
-
 
 #elif LAB_NUM == 5
 #include <Linked_List.hpp>
@@ -773,12 +769,129 @@ int main() {
 	}
 }
 
-#elif LAB_NUM == -5 
-#include <gtest/gtest.h>
+
+#elif LAB_NUM == 6
+#include <SFML/Graphics.hpp>
+#include <WordDrawer.hpp>
+#include <TextCircle.hpp>
+#include <Linked_List.hpp>
 
 int main() {
-	testing::InitGoogleTest();
-	return RUN_ALL_TESTS();
+	// Window object
+	sf::RenderWindow window(sf::VideoMode(1200, 800), "Lab06");
+
+	// Create font object and load font file to it
+	if (!TextCircle::circle_font.loadFromFile("../../media/fonts/stars-mounth/Stars-Mouth.ttf"))
+		std::cout << "ERROR: Cannot open font file!\n";
+
+	// WordDrawer object
+	WordDrawer WD("../../media/SCOWL/final/american-words.80", TextCircle::circle_font);
+
+	// LinkedList object
+	// .. List of all placed circles
+	ssuds::LinkedList<TextCircle> circles;
+
+	// Moving circle object
+	TextCircle movingCircle;
+	bool isMoving = false;
+	std::string word;
+
+	// User detail message
+	sf::Text userMessage;
+	userMessage.setFont(TextCircle::circle_font);
+	userMessage.setCharacterSize(24);
+	userMessage.setFillColor(sf::Color::White);
+	userMessage.setString("Left-click on empty spot!");
+
+	// Run the program as long as the window is open
+	while (window.isOpen()) {
+		// Event holder
+		sf::Event event;
+
+		// Check window events
+		while (window.pollEvent(event)) {
+			// Check if "close requested", close window
+			if (event.type == sf::Event::Closed)
+				window.close();
+
+			// Chec if a circle placement is needed
+			if (event.type == sf::Event::MouseButtonPressed) {
+				// Left click
+				if (event.mouseButton.button == sf::Mouse::Left) {
+					// Ensure the queue is full
+					WD.FillQueue();
+					 
+					// Coordinates of the mouse click 
+					sf::Vector2f circlePos(event.mouseButton.x, event.mouseButton.y);
+
+					// Variable to store overlap status
+					bool overlap = false;
+
+					// Check for overlap with existing circles
+					for (TextCircle& circle : circles) {
+						if (circle.Contains(circlePos)) {
+							overlap = true;
+							break;
+						}
+					}
+
+					if(!isMoving)
+						word = WD.GetWord();
+
+					// Check if circle is not overlapping
+					if (!overlap) {
+						// Check if circle needs to be moving
+						if (!isMoving) {
+							userMessage.setString("Move to desired location. Left-click to place, Right-click to discard!");
+							movingCircle = TextCircle(word, event.mouseButton.x, event.mouseButton.y);
+							isMoving = true;
+						}
+						// Place circle
+						else {
+							userMessage.setString("Left-click on empty spot!");
+							circles.Append(TextCircle(word, event.mouseButton.x, event.mouseButton.y));
+							isMoving = false;
+						}
+					}
+				}
+
+				// Right click
+				if (event.mouseButton.button == sf::Mouse::Right) {
+					userMessage.setString("Left-click on empty spot!");
+
+					// Clear circle
+					if (isMoving) {
+						isMoving = false;
+					}
+				}
+			}
+		}
+
+		// Keep track of mouse
+		if (isMoving) {
+			sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
+			movingCircle.setPosition(static_cast<float>(mousePosition.x), static_cast<float>(mousePosition.y));
+		}
+		
+		// Clear the window with black color
+		window.clear(sf::Color::Black);
+
+
+		// Draw moving circle
+		if (isMoving)
+			window.draw(movingCircle);
+
+		// Draw circles
+		for (TextCircle& circle : circles)
+			window.draw(circle);
+
+		window.draw(userMessage);
+
+		// End the current frame
+		window.display();
+	}
+
+	return 0;
 }
 
 #endif

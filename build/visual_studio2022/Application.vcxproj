@@ -25,6 +25,10 @@
     <ClCompile Include="..\..\src\Array_List_Utility_Tests.cpp" />
     <ClCompile Include="..\..\src\Foo.cpp" />
     <ClCompile Include="..\..\src\Linked_List_Test.cpp" />
+    <ClCompile Include="..\..\src\Queue_Tests.cpp" />
+    <ClCompile Include="..\..\src\Stack_Tests.cpp" />
+    <ClCompile Include="..\..\src\TextCircle.cpp" />
+    <ClCompile Include="..\..\src\WordDrawer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\Array_List.h" />
@@ -32,6 +36,10 @@
     <ClInclude Include="..\..\include\Array_List_v2.hpp" />
     <ClInclude Include="..\..\include\Foo.hpp" />
     <ClInclude Include="..\..\include\Linked_List.hpp" />
+    <ClInclude Include="..\..\include\Queue.hpp" />
+    <ClInclude Include="..\..\include\Stack.hpp" />
+    <ClInclude Include="..\..\include\TextCircle.hpp" />
+    <ClInclude Include="..\..\include\WordDrawer.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
@@ -127,13 +135,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\dependencies\googletest_sdk\include;..\..\include;..\..\dependencies;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\dependencies\SFML-2.6.1\include;..\..\dependencies\googletest_sdk\include;..\..\include;..\..\dependencies;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\dependencies\googletest_sdk\lib;..\..\dependencies;..\..\include;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>gtest_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\dependencies\SFML-2.6.1\lib;..\..\dependencies\googletest_sdk\lib;..\..\dependencies;..\..\include;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>gtest_d.lib;%(AdditionalDependencies);sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -144,15 +152,15 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\dependencies\googletest_sdk\include;..\..\include;..\..\dependencies;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\dependencies\SFML-2.6.1\include;..\..\dependencies\googletest_sdk\include;..\..\include;..\..\dependencies;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\dependencies\googletest_sdk\lib;..\..\dependencies;..\..\include;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>gtest.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\dependencies\SFML-2.6.1\lib;..\..\dependencies\googletest_sdk\lib;..\..\dependencies;..\..\include;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>gtest.lib;%(AdditionalDependencies);sfml-graphics.lib;sfml-window.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
