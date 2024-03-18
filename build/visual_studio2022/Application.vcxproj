@@ -25,6 +25,7 @@
     <ClCompile Include="..\..\src\Array_List_Utility_Tests.cpp" />
     <ClCompile Include="..\..\src\Foo.cpp" />
     <ClCompile Include="..\..\src\Linked_List_Test.cpp" />
+    <ClCompile Include="..\..\src\OrderedSet_Tests.cpp" />
     <ClCompile Include="..\..\src\Queue_Tests.cpp" />
     <ClCompile Include="..\..\src\Stack_Tests.cpp" />
     <ClCompile Include="..\..\src\TextCircle.cpp" />
