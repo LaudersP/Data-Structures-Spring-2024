@@ -52,7 +52,44 @@ namespace ssuds {
 			}
 		};
 
-		// Code here...
+		// Variable to hold the starting node of the tree
+		_Node* _root;
+
+		// Variable to hold the size of the tree
+		unsigned int _size;
+
+	public:
+		// Constructor
+		OrderedSet() : _size(0), _root(nullptr) {
+			// Empty
+		}
+
+		// Function to get the size of the tree
+		unsigned int size() const {
+			return _size;
+		}
+
+		// Function to insert a value into the tree
+		// .. Return true if the value is added
+		bool insert(const T& val) {
+			// Check if the list is empty
+			if (_size == 0) {
+				_root = new _Node(val);
+				_size = 1;
+				return true;
+			}
+			// List already has root
+			else {
+				if (_root->insert_recursive(val)) {
+					_size++;
+					return true;
+				}
+				else {
+					return false;
+				}
+				
+			}
+		}
 	};
 }
 
