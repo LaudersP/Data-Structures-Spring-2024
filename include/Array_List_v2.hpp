@@ -439,6 +439,27 @@ namespace ssuds {
 		}
 
 		/***************************************************************************//**
+		* @brief Compares two ArrayList and tests if they are equal.
+		*
+		* @param The ArrayList object to compare to.
+		*
+		* @return True if equal, false if not.
+		******************************************************************************/
+		bool operator==(const ArrayListV2& other) {
+			if ((_size == other._size) && (_capacity == other._capacity)) {
+				for (unsigned int i = 0; i < other.Size(); i++) {
+					if (_data[i] != other[i])
+						return false;
+				}
+
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+
+		/***************************************************************************//**
 		* @brief Used to get the beginning of the iterator.
 		*
 		* @return The iterator pointing to the beginning of the ArrayList.
