@@ -31,7 +31,7 @@ namespace ssuds {
 			// Constructor
 			_Node(const T& val) : _data(val), _left(nullptr), _right(nullptr) {}
 
-			// Recursive function to insert a value in the proper placement in the tree
+			// Recursive method to insert a value in the proper placement in the tree
 			bool insert_recursive(const T& val) {
 				// Check if 'val' needs to be placed to the left
 				if (val < _data) {
@@ -40,9 +40,8 @@ namespace ssuds {
 						_left = new _Node(val);
 						return true;
 					}
-					else {
+					else
 						_left->insert_recursive(val);
-					}
 				}
 				// Check if 'val' needs to be placed to the right
 				else if (val > _data) {
@@ -51,18 +50,15 @@ namespace ssuds {
 						_right = new _Node(val);
 						return true;
 					}
-					else {
+					else
 						_right->insert_recursive(val);
-					}
 				}
 				// Duplicated value
-				else {
-					// "Hold" value since it is duplicated
+				else
 					return false;
-				}
 			}
 
-			// Recursive function to traverse the tree
+			// Recursive method to traverse the tree
 			void traverse(ssuds::ArrayListV2<T>& values, TraversalType type) const {
 				switch (type) {
 				case PRE_ORDER:
@@ -122,12 +118,12 @@ namespace ssuds {
 			return oss;
 		}
 
-		// Function to get the size of the tree
+		// Method to get the size of the tree
 		unsigned int size() const {
 			return _size;
 		}
 
-		// Function to insert a value into the tree
+		// Method to insert a value into the tree
 		// .. Return true if the value is added
 		bool insert(const T& val) {
 			// Check if the list is empty
@@ -144,24 +140,20 @@ namespace ssuds {
 					return true;
 				}
 				// Nothing was inserted
-				else {
+				else
 					return false;
-				}
 				
 			}
 		}
 
-		// Function to traverse through the tree
+		// Method to traverse through the tree
 		ssuds::ArrayListV2<T> traversal(TraversalType type = IN_ORDER) const {
-			ssuds::ArrayListV2<T> values;
-			
-			// Check that there is a root
-			if (_root != nullptr) {
-				_root->traverse(values, type);
-			}
-			else {
+			// Check that root is not 'nullptr'
+			if(_root == nullptr)
 				throw std::out_of_range("ERROR: Unable to perform traversal, no root!");
-			}
+
+			ssuds::ArrayListV2<T> values;
+			_root->traverse(values, type);
 
 			return values;
 		}
