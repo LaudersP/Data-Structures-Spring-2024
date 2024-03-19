@@ -17,6 +17,14 @@ protected:
 
 	// Make an instance
 	ssuds::OrderedSet<int> tree;
+
+	// Desired Traversal outputs
+	ssuds::ArrayListV2<int> desiredPreOrderTraversal{ 175, 26, 8, 67, 400, 852 };
+	ssuds::ArrayListV2<int> desiredInOrderTraversal{ 8, 26, 67, 175, 400, 852 };
+	ssuds::ArrayListV2<int> desiredPostOrderTraversal{ 8, 67, 26, 852, 400, 175 };
+
+	// Variable to hold traversal outputs
+	std::ostringstream oss;
 };
 
 TEST_F(OrderedSetTestFixtureINT, SizeTest) {
@@ -37,6 +45,40 @@ TEST_F(OrderedSetTestFixtureINT, InsertTest) {
 	EXPECT_FALSE(tree.insert(8));
 
 	EXPECT_EQ(tree.size(), 10);
+}
+
+TEST_F(OrderedSetTestFixtureINT, TraversalPreOrderTest) {
+	EXPECT_EQ(tree.size(), 6);
+
+	ssuds::ArrayListV2<int> preOrderValues = tree.traversal(ssuds::OrderedSet<int>::PRE_ORDER);
+
+	EXPECT_TRUE(preOrderValues == desiredPreOrderTraversal);
+	EXPECT_FALSE(preOrderValues == desiredInOrderTraversal);
+	EXPECT_FALSE(preOrderValues == desiredPostOrderTraversal);
+}
+
+TEST_F(OrderedSetTestFixtureINT, TraversalInOrderTest) {
+	EXPECT_EQ(tree.size(), 6);
+
+	ssuds::ArrayListV2<int> inOrderValues = tree.traversal();
+
+	EXPECT_FALSE(inOrderValues == desiredPreOrderTraversal);
+	EXPECT_TRUE(inOrderValues == desiredInOrderTraversal);
+	EXPECT_FALSE(inOrderValues == desiredPostOrderTraversal);
+}
+
+TEST_F(OrderedSetTestFixtureINT, TraversalPostOrderTest) {
+	EXPECT_EQ(tree.size(), 6);
+
+	ssuds::ArrayListV2<int> postOrderValues = tree.traversal(ssuds::OrderedSet<int>::POST_ORDER);
+
+	EXPECT_FALSE(postOrderValues == desiredPreOrderTraversal);
+	EXPECT_FALSE(postOrderValues == desiredInOrderTraversal);
+	EXPECT_TRUE(postOrderValues == desiredPostOrderTraversal);
+
+	ssuds::OrderedSet<int> tree2;
+
+	EXPECT_THROW(tree2.traversal(), std::out_of_range);
 }
 
 #endif
