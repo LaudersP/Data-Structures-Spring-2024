@@ -104,4 +104,22 @@ TEST_F(OrderedSetTestFixtureINT, ClearTest) {
 	tree.clear();
 	EXPECT_EQ(tree.size(), 0);
 }
+
+TEST_F(OrderedSetTestFixtureINT, HeightTest) {
+	EXPECT_EQ(tree.getHeight(), 2);
+	tree.insert(999);
+	EXPECT_EQ(tree.getHeight(), 3);
+	tree.rebalance();
+	EXPECT_EQ(tree.getHeight(), 2);
+}
+
+TEST_F(OrderedSetTestFixtureINT, EraseTest) {
+	ssuds::ArrayListV2<int> values1 = tree.traversal();
+	EXPECT_TRUE(tree.erase(8));
+	ssuds::ArrayListV2<int> values2 = tree.traversal();
+	EXPECT_FALSE(values1 == values2);
+
+	EXPECT_FALSE(tree.erase(8));
+}
+
 #endif
