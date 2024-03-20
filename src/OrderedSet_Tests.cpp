@@ -122,4 +122,27 @@ TEST_F(OrderedSetTestFixtureINT, EraseTest) {
 	EXPECT_FALSE(tree.erase(8));
 }
 
+TEST_F(OrderedSetTestFixtureINT, IteratorTest) {
+	for (ssuds::OrderedSet<int>::OrderedSetIterator i = tree.begin(); i != tree.end(); ++i)
+		oss << *i << " ";
+
+	std::string desiredString = "8 26 67 175 400 852 ";
+
+	EXPECT_EQ(oss.str(), desiredString);
+}
+
+TEST_F(OrderedSetTestFixtureINT, IteratorTest2) {
+	EXPECT_TRUE(tree.insert(867));
+	EXPECT_TRUE(tree.insert(637));
+	EXPECT_TRUE(tree.insert(794));
+	EXPECT_TRUE(tree.insert(768));
+
+	std::string desiredString = "8 26 67 175 400 637 768 794 852 867 ";
+
+	for (ssuds::OrderedSet<int>::OrderedSetIterator i = tree.begin(); i != tree.end(); ++i)
+		oss << *i << " ";
+
+	EXPECT_EQ(oss.str(), desiredString);
+}
+
 #endif
