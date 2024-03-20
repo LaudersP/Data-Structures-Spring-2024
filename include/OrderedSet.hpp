@@ -151,50 +151,16 @@ namespace ssuds {
 		// Class structure to handle iterator
 		class Iterator {
 		protected:
+			// Stack to keep track of node pointers
+			ssuds::Stack<_Node*> nodeStack;
+
 			// Pointer to a node
 			_Node* _ptr;
-
-			// Iterator index
-			unsigned int _index;
 		public:
-			// Default constructor
-			Iterator() {
-				_ptr = nullptr;
-				_index = 0;
-			}
+			// Constructor
+			Iterator(_Node* node) : _ptr(node) {}
 
-			// Override constructor
-			Iterator(_Node* node, unsigned int index) : _ptr(node), _index(index) {}
-
-			// Dereference operator
-			T& operator*() const {
-				return _ptr->_data;
-			}
-
-			// Increment Operator
-			LinkedListIterator& operator++() {
-				// Code here...
-			}
-
-			// Equal comparison operator
-			bool operator==(const Iterator& other) const {
-				return _ptr = other._ptr && _index = other._index;
-			}
-
-			// Nonequal comparison operator
-			bool operator!=(const Iterator& other) const {
-				return !(*this == other);
-			}
-
-			// Method for getting the index
-			unsigned int index() const {
-				return _index;
-			}
-
-			// Method for getting the pointer
-			_Node* pointer() const {
-				return _ptr;
-			}
+			// Remaining code here...
 		};
 
 		// Constructor
