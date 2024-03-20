@@ -139,6 +139,63 @@ namespace ssuds {
 
 				return leftHeight > rightHeight ? leftHeight : rightHeight;
 			}
+
+			// Recursive method to erase a node of the tree
+			_Node* eraseTraversal(const T& val) {
+				// Check if the val is current nodes data
+				if (val == _data) {
+					// Check if node is a leaf
+					if (_left == nullptr && _right == nullptr)
+						return nullptr;
+
+					// Check for single child nodes
+					if (_left == nullptr && _right != nullptr) {
+						_Node* replacer = _right;
+						delete this;
+						return replacer;
+					}
+					else if (_left != nullptr && _right == nullptr) {
+						_Node* replacer = _left;
+						delete this;
+						return replacer;
+					}
+
+					// Node with two children
+					_Node* replacer = inorderSuccessor(_right);
+					_data = replacer->_data;
+					_right = _right->eraseTraversal(replacer->_data);
+				}
+				// Check if the val is less than current nodes data
+				else if (val < _data) {
+					_Node* replacer = _left->eraseTraversal(val);
+					
+					// Check that left wasn't already removed
+					if (replacer != _left) {
+						delete _left;
+						_left = replacer;
+					}
+				}
+				// Check if the val is greater than current nodes data
+				else if (val > _data) {
+					_Node* replacer = _right->eraseTraversal(val);
+
+					// Check that right wasn't alread
+					if (replacer != _right) {
+						delete _right;
+						_right = replacer;
+					}
+				}
+			}
+
+			private:
+				_Node* inorderSuccessor(_Node* node) const {
+					_Node* current = node;
+
+					while (current && current->_left != nullptr)
+						current = current->_left;
+
+					return current;
+				}
 		};
 		
 		// Variable to hold the starting node of the tree
@@ -268,14 +325,7 @@ namespace ssuds {
 			if (!contains(val))
 				return false;
 
-			ssuds::ArrayListV2<T> orderedValues;
-			_root->traversalRecursive(orderedValues, ssuds::OrderedSet<T>::IN_ORDER);
-			orderedValues.Remove(orderedValues.Find(val));
-
-			clear();
-			balanceRecursive(orderedValues, 0, orderedValues.Size() - 1);
-
-			return true;
+			_root->eraseTraversal(val) == nullptr ? false : true;
 		}
 
 	private:
