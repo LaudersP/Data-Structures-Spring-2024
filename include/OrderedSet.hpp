@@ -32,7 +32,7 @@ namespace ssuds {
 			_Node(const T& val) : _data(val), _left(nullptr), _right(nullptr) {}
 
 			// Recursive method to insert a value in the proper placement in the tree
-			bool insert_recursive(const T& val) {
+			bool insertRecursive(const T& val) {
 				// Check if 'val' needs to be placed to the left
 				if (val < _data) {
 					// Check if there is an existing left node
@@ -41,7 +41,7 @@ namespace ssuds {
 						return true;
 					}
 					else
-						_left->insert_recursive(val);
+						_left->insertRecursive(val);
 				}
 				// Check if 'val' needs to be placed to the right
 				else if (val > _data) {
@@ -51,7 +51,7 @@ namespace ssuds {
 						return true;
 					}
 					else
-						_right->insert_recursive(val);
+						_right->insertRecursive(val);
 				}
 				// Duplicated value
 				else
@@ -59,39 +59,71 @@ namespace ssuds {
 			}
 
 			// Recursive method to traverse the tree
-			void traverse(ssuds::ArrayListV2<T>& values, TraversalType type) const {
+			void traversalRecursive(ssuds::ArrayListV2<T>& values, TraversalType type) const {
 				switch (type) {
 				case PRE_ORDER:
 					values.Append(_data);
 
+					// Check if there is a node left
 					if (_left != nullptr)
-						_left->traverse(values, type);
+						_left->traversalRecursive(values, type);
 
+					// Check if there is a node right
 					if (_right != nullptr)
-						_right->traverse(values, type);
+						_right->traversalRecursive(values, type);
 
 					break;
 				case IN_ORDER:
-					if (_left)
-						_left->traverse(values, type);
+					// Check if there is a node left
+					if (_left != nullptr)
+						_left->traversalRecursive(values, type);
 
 					values.Append(_data);
 
-					if (_right)
-						_right->traverse(values, type);
+					// Check if there is a node right
+					if (_right != nullptr)
+						_right->traversalRecursive(values, type);
 
 					break;
 				case POST_ORDER:
-					if (_left)
-						_left->traverse(values, type);
+					// Check if there is a node left
+					if (_left != nullptr)
+						_left->traversalRecursive(values, type);
 
-					if (_right)
-						_right->traverse(values, type);
+					// Check if there is a node right
+					if (_right != nullptr)
+						_right->traversalRecursive(values, type);
 
 					values.Append(_data);
 
 					break;
 				}
+			}
+
+			// Recursive method for removing nodes from the tree
+			void clearRecursive(_Node* node) {
+				if (node == nullptr)
+					return;
+
+				clearRecursive(node->_left);
+				clearRecursive(node->_right);
+				delete node;
+			}
+
+			// Recursive method to check if a value is contained in the tree
+			bool containsRecursive(const T& val) const {
+				// Check if the node is nullptr, if so val is not contained
+				if (this == nullptr)
+					return false;
+				// Check if node data is val, val is contained
+				else if (val == _data)
+					return true;
+				// Check if node data is less than val, go left
+				else if (val < _data)
+					return _left->containsRecursive(val);
+				// Check if node data is greater than val, go right
+				else if (val > _data)
+					return _right->containsRecursive(val);
 			}
 		};
 
@@ -107,6 +139,11 @@ namespace ssuds {
 			// Empty
 		}
 
+		// Destructor
+		~OrderedSet() {
+			clear();
+		}
+
 		// Ostream operator
 		friend std::ostream& operator<<(std::ostream& oss, const OrderedSet<T>& set) {
 			ssuds::ArrayListV2<T> values = set.traversal(IN_ORDER);
@@ -116,11 +153,6 @@ namespace ssuds {
 				oss << val << " ";
 
 			return oss;
-		}
-
-		// Method to get the size of the tree
-		unsigned int size() const {
-			return _size;
 		}
 
 		// Method to insert a value into the tree
@@ -135,7 +167,7 @@ namespace ssuds {
 			// List already has root
 			else {
 				// Check if something was inserted
-				if (_root->insert_recursive(val)) {
+				if (_root->insertRecursive(val)) {
 					_size++;
 					return true;
 				}
@@ -153,9 +185,71 @@ namespace ssuds {
 				throw std::out_of_range("ERROR: Unable to perform traversal, no root!");
 
 			ssuds::ArrayListV2<T> values;
-			_root->traverse(values, type);
+			_root->traversalRecursive(values, type);
 
 			return values;
+		}
+
+		// Method to balance the tree
+		void rebalance() {
+			// Check that root is not 'nullptr'
+			if (_root == nullptr)
+				throw std::out_of_range("ERROR: Unable to perform rebalance, no root");
+
+			ssuds::ArrayListV2<T> orderedValues;
+			_root->traversalRecursive(orderedValues, ssuds::OrderedSet<T>::IN_ORDER);
+
+			clear();
+			balanceRecursive(orderedValues, 0, orderedValues.Size() - 1);
+		}
+
+		// Method to clear the tree
+		void clear() {
+			_root->clearRecursive(_root);
+			_root = nullptr;
+			_size = 0;
+		}
+
+		// Method to get the size of the tree
+		unsigned int size() const {
+			return _size;
+		}
+
+		// Method to check if a value is in the tree
+		bool contains(const T& val) const {
+			// Check that root is not 'nullptr'
+			if (_root == nullptr)
+				throw std::out_of_range("ERROR: Unable to perform contain, no root!");
+
+			return _root->containsRecursive(val);
+		}
+
+		// Method to get the height of the tree
+		unsigned int getHeight() const {
+			// Code here
+		}
+
+		// Method for removing a node in the tree
+		bool erase(const T& val) {
+			// Code here
+		}
+
+	private:
+		// Function to get the middle of two values
+		unsigned int getMiddle(const unsigned int start, const unsigned int end) {
+			return (start + end) / 2;
+		}
+
+		// Function to perform balancing recursive code
+		void balanceRecursive(const ssuds::ArrayListV2<T>& values, const int start, const int end) {
+			// Check if starting and ending are valid
+			if (start > end)
+				return;
+
+			int index = getMiddle(start, end);
+			insert(values[index]);
+			balanceRecursive(values, start, index - 1);
+			balanceRecursive(values, index + 1, end);
 		}
 	};
 }
