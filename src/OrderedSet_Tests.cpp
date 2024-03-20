@@ -81,4 +81,27 @@ TEST_F(OrderedSetTestFixtureINT, TraversalPostOrderTest) {
 	EXPECT_THROW(tree2.traversal(), std::out_of_range);
 }
 
+TEST_F(OrderedSetTestFixtureINT, RebalanceTest) {
+	ssuds::ArrayListV2<int> values1 = tree.traversal(ssuds::OrderedSet<int>::POST_ORDER);
+	tree.rebalance();
+	ssuds::ArrayListV2<int> values2 = tree.traversal(ssuds::OrderedSet<int>::POST_ORDER);
+	ssuds::ArrayListV2<int> values3 = tree.traversal(ssuds::OrderedSet<int>::POST_ORDER);
+	EXPECT_FALSE(values1 == values2);
+	EXPECT_TRUE(values2 == values3);
+}
+
+TEST_F(OrderedSetTestFixtureINT, ContainsTest) {
+	EXPECT_FALSE(tree.contains(1));
+
+	tree.insert(22);
+	EXPECT_EQ(tree.size(), 7);
+	EXPECT_TRUE(tree.contains(22));
+	EXPECT_TRUE(tree.contains(8));
+	EXPECT_TRUE(tree.contains(852));
+}
+
+TEST_F(OrderedSetTestFixtureINT, ClearTest) {
+	tree.clear();
+	EXPECT_EQ(tree.size(), 0);
+}
 #endif
