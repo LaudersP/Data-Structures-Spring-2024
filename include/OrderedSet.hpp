@@ -206,18 +206,61 @@ namespace ssuds {
 
 	public:
 		// Class structure to handle iterator
-		class Iterator {
+		class OrderedSetIterator {
 		protected:
 			// Stack to keep track of node pointers
 			ssuds::Stack<_Node*> nodeStack;
 
 			// Pointer to a node
 			_Node* _ptr;
+
+			// Function to advance the iterator
+			void advance() {
+				// Get the furthest left item
+				while (_ptr != nullptr) {
+					nodeStack.Push(_ptr);
+					_ptr = _ptr->_left;
+				}
+
+				// Check if the 'nodeStack' is empty
+				if (!nodeStack.Empty()) {
+					// Make way back up the tree
+					_ptr = nodeStack.Top();
+					nodeStack.Pop();
+				}
+				// 'nodeStack' is empty
+				else {
+					_ptr = nullptr;
+				}
+			}
+
 		public:
 			// Constructor
-			Iterator(_Node* node) : _ptr(node) {}
+			OrderedSetIterator(_Node* root) : _ptr(root) {
+				advance();
+			}
 
-			// Remaining code here...
+			// ++operator used to advance the iterator
+			OrderedSetIterator& operator++() {
+				_ptr = _ptr->_right;
+				advance();
+				return *this;
+			}
+
+			// *operator to get the current nodes data
+			T& operator*() const {
+				return _ptr->_data;
+			}
+
+			// ==operator to compare iterators
+			bool operator==(const OrderedSetIterator& other) const {
+				return _ptr == other._ptr;
+			}
+
+			// !=operator to compare iterators
+			bool operator!=(const OrderedSetIterator& other) const {
+				return !(*this == other);
+			}
 		};
 
 		// Constructor
@@ -326,6 +369,20 @@ namespace ssuds {
 				return false;
 
 			_root->eraseTraversal(val) == nullptr ? false : true;
+		}
+
+		// Function to get the beginning of the iterator
+		OrderedSetIterator begin() const {
+			// Check that root is not 'nullptr'
+			if (_root == nullptr)
+				return end();
+
+			return OrderedSetIterator(_root);
+		}
+
+		// Function to get the ending of the iterator
+		OrderedSetIterator end() const {
+			return OrderedSetIterator(nullptr);
 		}
 
 	private:
