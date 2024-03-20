@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <Array_List_v2.hpp>
+#include <Stack.hpp>
 
 namespace ssuds {
 	template <class T>
@@ -125,8 +126,21 @@ namespace ssuds {
 				else if (val > _data)
 					return _right->containsRecursive(val);
 			}
-		};
 
+			// Recursive method to get the height of the tree
+			unsigned int heightRecursive(const _Node* node) const {
+				unsigned int leftHeight = 0, rightHeight = 0;
+
+				if(node->_left != nullptr)
+					leftHeight = 1 + heightRecursive(node->_left);
+
+				if (node->_right != nullptr)
+					rightHeight = 1 + heightRecursive(node->_right);
+
+				return leftHeight > rightHeight ? leftHeight : rightHeight;
+			}
+		};
+		
 		// Variable to hold the starting node of the tree
 		_Node* _root;
 
@@ -134,6 +148,55 @@ namespace ssuds {
 		unsigned int _size;
 
 	public:
+		// Class structure to handle iterator
+		class Iterator {
+		protected:
+			// Pointer to a node
+			_Node* _ptr;
+
+			// Iterator index
+			unsigned int _index;
+		public:
+			// Default constructor
+			Iterator() {
+				_ptr = nullptr;
+				_index = 0;
+			}
+
+			// Override constructor
+			Iterator(_Node* node, unsigned int index) : _ptr(node), _index(index) {}
+
+			// Dereference operator
+			T& operator*() const {
+				return _ptr->_data;
+			}
+
+			// Increment Operator
+			LinkedListIterator& operator++() {
+				// Code here...
+			}
+
+			// Equal comparison operator
+			bool operator==(const Iterator& other) const {
+				return _ptr = other._ptr && _index = other._index;
+			}
+
+			// Nonequal comparison operator
+			bool operator!=(const Iterator& other) const {
+				return !(*this == other);
+			}
+
+			// Method for getting the index
+			unsigned int index() const {
+				return _index;
+			}
+
+			// Method for getting the pointer
+			_Node* pointer() const {
+				return _ptr;
+			}
+		};
+
 		// Constructor
 		OrderedSet() : _size(0), _root(nullptr) {
 			// Empty
@@ -226,12 +289,27 @@ namespace ssuds {
 
 		// Method to get the height of the tree
 		unsigned int getHeight() const {
-			// Code here
+			return _root->heightRecursive(_root);
 		}
 
 		// Method for removing a node in the tree
 		bool erase(const T& val) {
-			// Code here
+			// Check that root is not 'nullptr'
+			if (_root == nullptr)
+				throw std::out_of_range("ERROR: Unable to perform erase, no root!");
+			
+			// Check that the desired value is in the tree
+			if (!contains(val))
+				return false;
+
+			ssuds::ArrayListV2<T> orderedValues;
+			_root->traversalRecursive(orderedValues, ssuds::OrderedSet<T>::IN_ORDER);
+			orderedValues.Remove(orderedValues.Find(val));
+
+			clear();
+			balanceRecursive(orderedValues, 0, orderedValues.Size() - 1);
+
+			return true;
 		}
 
 	private:
