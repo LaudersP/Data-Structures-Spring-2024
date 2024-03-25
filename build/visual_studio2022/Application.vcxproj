@@ -25,6 +25,7 @@
     <ClCompile Include="..\..\src\Array_List_Utility_Tests.cpp" />
     <ClCompile Include="..\..\src\Foo.cpp" />
     <ClCompile Include="..\..\src\Linked_List_Test.cpp" />
+    <ClCompile Include="..\..\src\OrderedSet_Tests.cpp" />
     <ClCompile Include="..\..\src\Queue_Tests.cpp" />
     <ClCompile Include="..\..\src\Stack_Tests.cpp" />
     <ClCompile Include="..\..\src\TextCircle.cpp" />
@@ -36,6 +37,7 @@
     <ClInclude Include="..\..\include\Array_List_v2.hpp" />
     <ClInclude Include="..\..\include\Foo.hpp" />
     <ClInclude Include="..\..\include\Linked_List.hpp" />
+    <ClInclude Include="..\..\include\OrderedSet.hpp" />
     <ClInclude Include="..\..\include\Queue.hpp" />
     <ClInclude Include="..\..\include\Stack.hpp" />
     <ClInclude Include="..\..\include\TextCircle.hpp" />

@@ -1,6 +1,6 @@
 #include <iostream>
 
-#define LAB_NUM 6	// 0 Runs GoogleTest
+#define LAB_NUM 0	// 0 Runs GoogleTest
 
 #if LAB_NUM == 0
 #include <gtest/gtest.h>
