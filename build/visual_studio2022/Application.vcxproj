@@ -41,6 +41,7 @@
     <ClInclude Include="..\..\include\Queue.hpp" />
     <ClInclude Include="..\..\include\Stack.hpp" />
     <ClInclude Include="..\..\include\TextCircle.hpp" />
+    <ClInclude Include="..\..\include\UnorderedHashMap.hpp" />
     <ClInclude Include="..\..\include\WordDrawer.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

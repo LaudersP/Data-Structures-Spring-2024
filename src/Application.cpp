@@ -1,6 +1,6 @@
 #include <iostream>
 
-#define LAB_NUM 0	// 0 Runs GoogleTest
+#define LAB_NUM 8 // 0 Runs GoogleTest
 
 #if LAB_NUM == 0
 #include <gtest/gtest.h>
@@ -893,5 +893,36 @@ int main() {
 
 	return 0;
 }
+
+#elif LAB_NUM == 8
+#include <UnorderedHashMap.hpp>
+
+int main() {
+	ssud::UnorderedMap<std::string, unsigned int> map(10);
+	map["Joe"];									// 1
+	map["Erin"];								// 2
+	map["Abe"];									// 3
+	map["HAHA"] = 11;							// 4
+	std::cout << "Size: " << map.size() <<"\n";
+	std::cout << "Capacity: " << map.capacity() << "\n";
+	map.debug_print();
+
+	map["Joe"] = 123;
+	std::cout << "Size: " << map.size() << "\n";
+	std::cout << "Capacity: " << map.capacity() << "\n";
+	map.debug_print();
+
+	map["Test1"] = 4;							// 5
+	map["Test2"] = 3;							// 6
+	std::cout << "Size: " << map.size() << "\n";
+	std::cout << "Capacity: " << map.capacity() << "\n";
+	map.debug_print();
+
+	map["test3"] = 1;
+	std::cout << "Size: " << map.size() << "\n";
+	std::cout << "Capacity: " << map.capacity() << "\n";
+	std::cout << map;
+}
+
 
 #endif
