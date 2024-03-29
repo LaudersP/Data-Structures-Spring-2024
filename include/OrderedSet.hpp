@@ -103,6 +103,7 @@ namespace ssuds {
 
 			// Recursive method for removing nodes from the tree
 			void clearRecursive(_Node* node) {
+				// Check if the node is nullptr, if so tree is empty
 				if (node == nullptr)
 					return;
 
@@ -131,9 +132,11 @@ namespace ssuds {
 			unsigned int heightRecursive(const _Node* node) const {
 				unsigned int leftHeight = 0, rightHeight = 0;
 
+				// Check if there is a left node
 				if(node->_left != nullptr)
 					leftHeight = 1 + heightRecursive(node->_left);
 
+				// Check if there is a right node
 				if (node->_right != nullptr)
 					rightHeight = 1 + heightRecursive(node->_right);
 
@@ -188,9 +191,11 @@ namespace ssuds {
 			}
 
 			private:
+				// Function used to get the successor when deleting a node
 				_Node* inorderSuccessor(_Node* node) const {
 					_Node* current = node;
 
+					// Loop while there is still a node to the left
 					while (current && current->_left != nullptr)
 						current = current->_left;
 
