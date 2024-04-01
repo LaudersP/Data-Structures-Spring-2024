@@ -1,4 +1,5 @@
 #include <iostream>
+#include <functional>
 
 #define LAB_NUM 8 // 0 Runs GoogleTest
 
@@ -922,6 +923,23 @@ int main() {
 	std::cout << "Size: " << map.size() << "\n";
 	std::cout << "Capacity: " << map.capacity() << "\n";
 	std::cout << map;
+
+	for (std::pair<std::string, int> temp : map) {
+		std::cout << temp.first << ":" << temp.second << "\n";
+	}
+
+	std::cout << "\nFinding \'Joe\': " << map.contains("Joe") << "\n";
+	std::cout << "Finding \'NOPE\': " << map.contains("NOPE") << "\n";
+
+	ssud::UnorderedMap<std::string, unsigned int>::UnorderedMapIterator iter = map.find("Joe");
+
+	if (iter != map.end()) {
+		std::pair<std::string, unsigned int> element = *iter;
+
+		std::cout << "Found 'Joe': " << element.first << " = " << element.second << "\n";
+	}
+	else
+		std::cout << "'Joe' not found in the map.\n";
 }
 
 
