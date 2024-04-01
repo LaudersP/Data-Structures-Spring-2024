@@ -940,6 +940,13 @@ int main() {
 	}
 	else
 		std::cout << "'Joe' not found in the map.\n";
+
+	map.remove(iter);
+	std::cout << "\n";
+
+	for (std::pair<std::string, int> temp : map) {
+		std::cout << temp.first << ":" << temp.second << "\n";
+	}
 }
 
 
