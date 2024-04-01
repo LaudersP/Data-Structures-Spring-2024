@@ -68,6 +68,11 @@ namespace ssud {
 			bool operator!=(const UnorderedMapIterator& other) const {
 				return _index != other._index || _ptr != other._ptr;
 			}
+
+			// Getter for index
+			unsigned int index() const {
+				return _index;
+			}
 		};
 
 		// Constructor
@@ -148,9 +153,16 @@ namespace ssud {
 		}
 
 		// Method used to remove a pair
-		// EDIT: figure out the argument; key or iterator
-		void remove() {
-			// Find code here ...
+		void remove(const UnorderedMapIterator& iter) {
+			int index = iter.index();
+
+			// Check for a valid index and that the slot is used
+			if (index >= 0 && index < _capacity && _tableUsed[index]) {
+				_tableUsed[index] = false;
+				_size--;
+
+				removeRehash();
+			}
 		}
 
 		// Method to debug print the map (empty included)
@@ -262,6 +274,27 @@ namespace ssud {
 			}
 
 			return -1;
+		}
+
+		void removeRehash() {
+			std::pair<K, V>* oldTableData = _tableData;
+			bool* oldTableUsed = _tableUsed;
+			unsigned int oldCapacity = _capacity;
+
+			_tableData = new std::pair<K, V>[_capacity];
+			_tableUsed = new bool[_capacity];
+
+			_size = 0;
+
+			// Loop through the old map
+			for (unsigned int i = 0; i < oldCapacity; i++) {
+				// Check if the old map slot is filled
+				if (oldTableUsed[i] == true)
+					(*this)[oldTableData[i].first] = oldTableData[i].second;
+			}
+
+			delete[] oldTableData;
+			delete[] oldTableUsed;
 		}
 	};
 }
