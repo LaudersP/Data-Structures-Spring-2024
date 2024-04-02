@@ -1,6 +1,7 @@
 #include <iostream>
+#include <functional>
 
-#define LAB_NUM 0	// 0 Runs GoogleTest
+#define LAB_NUM 0 // 0 Runs GoogleTest
 
 #if LAB_NUM == 0
 #include <gtest/gtest.h>
@@ -893,5 +894,60 @@ int main() {
 
 	return 0;
 }
+
+#elif LAB_NUM == 8
+#include <UnorderedHashMap.hpp>
+
+int main() {
+	ssuds::UnorderedMap<std::string, unsigned int> map(10);
+	map["Joe"];									// 1
+	map["Erin"];								// 2
+	map["Abe"];									// 3
+	map["HAHA"] = 11;							// 4
+	std::cout << "Size: " << map.size() <<"\n";
+	std::cout << "Capacity: " << map.capacity() << "\n";
+	map.debug_print();
+
+	map["Joe"] = 123;
+	std::cout << "Size: " << map.size() << "\n";
+	std::cout << "Capacity: " << map.capacity() << "\n";
+	map.debug_print();
+
+	map["Test1"] = 4;							// 5
+	map["Test2"] = 3;							// 6
+	std::cout << "Size: " << map.size() << "\n";
+	std::cout << "Capacity: " << map.capacity() << "\n";
+	map.debug_print();
+
+	map["test3"] = 1;
+	std::cout << "Size: " << map.size() << "\n";
+	std::cout << "Capacity: " << map.capacity() << "\n";
+	std::cout << map;
+
+	for (std::pair<std::string, int> temp : map) {
+		std::cout << temp.first << ":" << temp.second << "\n";
+	}
+
+	std::cout << "\nFinding \'Joe\': " << map.contains("Joe") << "\n";
+	std::cout << "Finding \'NOPE\': " << map.contains("NOPE") << "\n";
+
+	ssuds::UnorderedMap<std::string, unsigned int>::UnorderedMapIterator iter = map.find("Joe");
+
+	if (iter != map.end()) {
+		std::pair<std::string, unsigned int> element = *iter;
+
+		std::cout << "Found 'Joe': " << element.first << " = " << element.second << "\n";
+	}
+	else
+		std::cout << "'Joe' not found in the map.\n";
+
+	map.remove(iter);
+	std::cout << "\n";
+
+	for (std::pair<std::string, int> temp : map) {
+		std::cout << temp.first << ":" << temp.second << "\n";
+	}
+}
+
 
 #endif

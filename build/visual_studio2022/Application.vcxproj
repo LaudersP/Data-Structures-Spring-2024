@@ -29,6 +29,7 @@
     <ClCompile Include="..\..\src\Queue_Tests.cpp" />
     <ClCompile Include="..\..\src\Stack_Tests.cpp" />
     <ClCompile Include="..\..\src\TextCircle.cpp" />
+    <ClCompile Include="..\..\src\UnorderedMap_Tests.cpp" />
     <ClCompile Include="..\..\src\WordDrawer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -41,6 +42,7 @@
     <ClInclude Include="..\..\include\Queue.hpp" />
     <ClInclude Include="..\..\include\Stack.hpp" />
     <ClInclude Include="..\..\include\TextCircle.hpp" />
+    <ClInclude Include="..\..\include\UnorderedHashMap.hpp" />
     <ClInclude Include="..\..\include\WordDrawer.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
