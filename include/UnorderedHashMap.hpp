@@ -10,21 +10,34 @@
 
 namespace ssuds {
 	template <class K, class V>
+	/**
+	* @brief Class for Unordered Map functionality and use.
+	*/
 	class UnorderedMap {
 	protected:
-		// Pointer to the hash map table
+		/**
+		* @brief Pointer to a table of pairs.
+		*/
 		std::pair<K, V>* _tableData;
 
-		// Pointer to the used array
+		/**
+		* @brief Pointer to a table used to keep track of used slots.
+		*/
 		bool* _tableUsed;
 
-		// Variable to hold the number of elements
+		/**
+		* @brief Variable to hold the number of used slots.
+		*/
 		unsigned int _size;
 
-		// Variable to hold the number of slots
+		/**
+		* @brief Variable to hold the max capacity of a map.
+		*/
 		unsigned int _capacity;
 
-		// Hash generator
+		/**
+		* @brief Variable for custom hash generator.
+		*/
 		std::hash<K> _hashGenerator;
 
 	public:
@@ -64,7 +77,6 @@ namespace ssuds {
 				moveIndex();
 			}
 
-			// === Operator Overloads ===s
 			/**
 			* @brief Dereference operator.
 			*
