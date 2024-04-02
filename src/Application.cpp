@@ -1,7 +1,7 @@
 #include <iostream>
 #include <functional>
 
-#define LAB_NUM 8 // 0 Runs GoogleTest
+#define LAB_NUM 0 // 0 Runs GoogleTest
 
 #if LAB_NUM == 0
 #include <gtest/gtest.h>
@@ -899,7 +899,7 @@ int main() {
 #include <UnorderedHashMap.hpp>
 
 int main() {
-	ssud::UnorderedMap<std::string, unsigned int> map(10);
+	ssuds::UnorderedMap<std::string, unsigned int> map(10);
 	map["Joe"];									// 1
 	map["Erin"];								// 2
 	map["Abe"];									// 3
@@ -931,7 +931,7 @@ int main() {
 	std::cout << "\nFinding \'Joe\': " << map.contains("Joe") << "\n";
 	std::cout << "Finding \'NOPE\': " << map.contains("NOPE") << "\n";
 
-	ssud::UnorderedMap<std::string, unsigned int>::UnorderedMapIterator iter = map.find("Joe");
+	ssuds::UnorderedMap<std::string, unsigned int>::UnorderedMapIterator iter = map.find("Joe");
 
 	if (iter != map.end()) {
 		std::pair<std::string, unsigned int> element = *iter;
