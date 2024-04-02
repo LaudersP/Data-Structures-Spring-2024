@@ -8,7 +8,7 @@
 
 #include <iostream>
 
-namespace ssud {
+namespace ssuds {
 	template <class K, class V>
 	class UnorderedMap {
 	protected:
@@ -28,16 +28,24 @@ namespace ssud {
 		std::hash<K> _hashGenerator;
 
 	public:
-		// Nested class for iterator functionality
+		/**
+		* @brief Nested class for iterator functionality.
+		*/
 		class UnorderedMapIterator {
 		protected:
-			// Pointer to an UnorderedMap
+			/**
+			* @brief Pointer to an UnorderedMap.
+			*/
 			UnorderedMap* _ptr;
 
-			// Variable to hold the iterator's index
+			/**
+			* @brief Variable to hold the iterator's index.
+			*/
 			int _index;
 
-			// Function to move _index to the next valid slot
+			/**
+			* @brief Function to move _index to the next valid slot.
+			*/
 			void moveIndex() {
 				// Increment while index is under capacity, and slot is NOT used
 				while (_index < _ptr->_capacity && _ptr->_tableUsed[_index] != true) {
@@ -46,36 +54,74 @@ namespace ssud {
 			}
 
 		public:
-			// Iterator instance constructor
+			/**
+			* @brief Iterator instance constructor.
+			*
+			* @param map The UnorderedMap to iterate over.
+			* @param i The initial index.
+			*/
 			UnorderedMapIterator(UnorderedMap* map, int i) : _ptr(map), _index(i) {
 				moveIndex();
 			}
 
 			// === Operator Overloads ===s
-			// Dereference operator
+			/**
+			* @brief Dereference operator.
+			*
+			* @return The pair at the current index.
+			*/
 			std::pair<K, V>& operator*() const {
 				return _ptr->_tableData[_index];
 			}
 
-			// Increment operator
+			/**
+			* @brief Increment operator.
+			*
+			* @return A reference to the iterator after incrementing.
+			*/
 			UnorderedMapIterator& operator++() {
 				++_index;
 				moveIndex();
 				return *this;
 			}
 
-			// Not equal operator
+			/**
+			* @brief Equal operator.
+			*
+			* @param other The other iterator to compare with.
+			*
+			* @return True if the iterators are equal, false otherwise.
+			*/
+			bool operator==(const UnorderedMapIterator& other) const {
+				return _index == other._index || _ptr == other._ptr;
+			}
+
+			/**
+			* @brief Not equal operator.
+			*
+			* @param other The other iterator to compare with.
+			*
+			* @return True if the iterators are not equal, false otherwise.
+			*/
 			bool operator!=(const UnorderedMapIterator& other) const {
 				return _index != other._index || _ptr != other._ptr;
 			}
 
-			// Getter for index
+			/**
+			* @brief Getter for index.
+			*
+			* @return The current index.
+			*/
 			unsigned int index() const {
 				return _index;
 			}
 		};
 
-		// Constructor
+		/**
+		* @brief Constructor for the UnorderedMap class.
+		*
+		* @param maxCapacity The maximum capacity of the map. Default value is 10.
+		*/
 		UnorderedMap(const unsigned int maxCapacity = 10) : _size(0), _capacity(maxCapacity) {
 			_tableData = new std::pair<K, V>[maxCapacity];
 			_tableUsed = new bool[maxCapacity];
@@ -84,19 +130,36 @@ namespace ssud {
 				_tableUsed[i] = false;
 		}
 
-		// Destructor
+		/**
+		* @brief Destructor for the UnorderedMap class.
+		*
+		* Deletes the dynamically allocated memory for _tableData and _tableUsed.
+		*/
 		~UnorderedMap() {
 			delete[] _tableData;
 			delete[] _tableUsed;
 		}
 
-		// Ostream operator
+		/**
+		* @brief Overloads the output stream operator for the UnorderedMap class.
+		*
+		* @param oss The output stream object.
+		* @param map The UnorderedMap object to be output.
+		*
+		* @return The output stream object.
+		*/
 		friend std::ostream& operator<< (std::ostream& oss, const UnorderedMap& map) {
 			oss << map.debug_print(true);
 			return oss;
 		}
 
-		// Bracket operator
+		/**
+		* @brief Overloads the subscript operator for the UnorderedMap class.
+		*
+		* @param key The key to access the value.
+		*
+		* @return The value associated with the key.
+		*/
 		V& operator[] (const K& key) {
 			unsigned int desiredLocation = hashLocation(key);
 
@@ -107,11 +170,11 @@ namespace ssud {
 					return _tableData[desiredLocation].second;
 				}
 
-				desiredLocation < _capacity ? desiredLocation++ : desiredLocation = 0;
+				desiredLocation = (desiredLocation + 1) % _capacity;
 			}
 
 			// Check if 60% of the capacity is used
-			if (_size >= (_capacity * .6))
+			if (_size >= (_capacity * 0.6))
 				grow();
 
 			_tableUsed[desiredLocation] = true;
@@ -120,17 +183,31 @@ namespace ssud {
 			return _tableData[desiredLocation].second;
 		}
 
-		// Method to get the size of the map
+		/**
+		* @brief Method to get the size of the map.
+		*
+		* @return The number of elements in the map.
+		*/
 		unsigned int size() const {
 			return _size;
 		}
 
-		// Method to get the capacity of the map
+		/**
+		* @brief Method to get the capacity of the map.
+		*
+		* @return The maximum number of elements the map can hold.
+		*/
 		unsigned int capacity() const {
 			return _capacity;
 		}
 
-		// Method used to check if the map contains a keys pair
+		/**
+		* @brief Method used to check if the map contains a key-value pair.
+		*
+		* @param key The key to search for.
+		*
+		* @return True if the key is found, false otherwise.
+		*/
 		bool contains(const K& key) const {
 			int result = locateKey(key);
 
@@ -141,7 +218,13 @@ namespace ssud {
 				return true;
 		}
 
-		// Method used to find a keys pair
+		/**
+		* @brief Method used to find a key-value pair.
+		*
+		* @param key The key to search for.
+		*
+		* @return An iterator pointing to the found key-value pair, or end() if not found.
+		*/
 		UnorderedMapIterator find(const K& key) const {
 			int result = locateKey(key);
 
@@ -152,7 +235,11 @@ namespace ssud {
 				return UnorderedMapIterator(const_cast<UnorderedMap*>(this), result);
 		}
 
-		// Method used to remove a pair
+		/**
+		* @brief Method used to remove a pair.
+		*
+		* @param iter The iterator pointing to the pair to be removed.
+		*/
 		void remove(const UnorderedMapIterator& iter) {
 			int index = iter.index();
 
@@ -165,7 +252,13 @@ namespace ssud {
 			}
 		}
 
-		// Method to debug print the map (empty included)
+		/**
+		* @brief Method to debug print the map (empty included).
+		*
+		* @param hideEmpty Whether to hide empty slots or not.
+		*
+		* @return A string representation of the map.
+		*/
 		std::string debug_print(const bool hideEmpty = false) const {
 			std::stringstream oss;
 			unsigned int printedItems = 0;
@@ -177,7 +270,7 @@ namespace ssud {
 					printedItems++;
 			}
 
-			oss << "OUTPUT: {";
+			oss << "{";
 
 			// Loop through the map
 			for (unsigned int i = 0; i < _capacity; i++) {
@@ -199,67 +292,77 @@ namespace ssud {
 				}
 			}
 
-			oss << "}\n\n";
+			oss << "}";
 			return oss.str();
 		}
 
-		// Method to get the biginning of the iterator
+		/**
+		* @brief Method to get the beginning of the iterator.
+		*
+		* @return An iterator pointing to the beginning of the map.
+		*/
 		UnorderedMapIterator begin() {
 			UnorderedMapIterator iter(this, 0);
 
 			return iter;
 		}
 
-		// Method to ge the ending of the iterator
+		/**
+		* @brief Method to get the end of the iterator.
+		*
+		* @return An iterator pointing to the end of the map.
+		*/
 		UnorderedMapIterator end() const {
 			return UnorderedMapIterator(const_cast<UnorderedMap*>(this), _capacity);
 		}
 
 
 	private:
-		// Function to hash the key value
+		/**
+		* @brief Calculates the hash location for a given key.
+		*
+		* @param val The key to calculate the hash for.
+		*
+		* @return The hash location for the key.
+		*/
 		unsigned int hashLocation(const K val) const {
 			unsigned int hash = _hashGenerator(val);
 			return hash % _capacity;
 		}
 		
-		// Function to grow the map
+		/**
+		* @brief Grows the map by doubling its capacity.
+		*/
 		void grow() {
+			unsigned int oldCapacity = _capacity;
 			_capacity *= 2;
-			std::pair<K, V>* tempData = new std::pair<K, V>[_capacity];
-			bool* tempUsed = new bool[_capacity];
+			std::pair<K, V>* oldTableData = _tableData;
+			bool* oldTableUsed = _tableUsed;
 
-			// Loop through original map
-			for (unsigned int i = 0; i < (_capacity / 2); i++) {
-				// Check that the current spot is filled
-				if (!_tableUsed[i])
-					continue;
+			_tableData = new std::pair<K, V>[_capacity];
+			_tableUsed = new bool[_capacity];
 
-				unsigned int newLocation = hashLocation(_tableData[i].first);
+			for (unsigned int i = 0; i < _capacity; i++)
+				_tableUsed[i] = false;
 
-				// Loop starting at the desired location
-				while (tempUsed[newLocation] != false) {
-					// Check if there is an item in this slot
-					if (tempData[newLocation].first == "") {
-						tempData[newLocation].first = _tableData[i].first;
-						tempData[newLocation].second = _tableData[i].second;
-						tempUsed[newLocation] = true;
+			_size = 0;
 
-						break;
-					}
-
-					newLocation <= _capacity ? newLocation++ : newLocation = 0;
-				}
+			for (unsigned int i = 0; i < oldCapacity; i++) {
+				if (oldTableUsed[i])
+					(*this)[oldTableData[i].first] = oldTableData[i].second;
 			}
 
-			delete[] _tableData;
-			delete[] _tableUsed;
-
-			_tableData = tempData;
-			_tableUsed = tempUsed;
+			delete[] oldTableData;
+			delete[] oldTableUsed;
 		}
 
-		// Function used by contains/finds
+		/**
+		* @brief Locates a key in the map.
+		*
+		* @param key The key to locate.
+		*
+		* @return The index of the key in the map, or -1 if not found.
+		*/
 		int locateKey(const K& key) const {
 			unsigned int desiredLocation = hashLocation(key);
 
@@ -270,12 +373,15 @@ namespace ssud {
 					return desiredLocation;
 				}
 
-				desiredLocation < _capacity ? desiredLocation++ : desiredLocation = 0;
+				desiredLocation = (desiredLocation + 1) % _capacity;
 			}
 
 			return -1;
 		}
 
+		/**
+		* @brief Rehashes the map after a removal.
+		*/
 		void removeRehash() {
 			std::pair<K, V>* oldTableData = _tableData;
 			bool* oldTableUsed = _tableUsed;
