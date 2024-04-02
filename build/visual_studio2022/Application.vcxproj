@@ -29,6 +29,7 @@
     <ClCompile Include="..\..\src\Queue_Tests.cpp" />
     <ClCompile Include="..\..\src\Stack_Tests.cpp" />
     <ClCompile Include="..\..\src\TextCircle.cpp" />
+    <ClCompile Include="..\..\src\UnorderedMap_Tests.cpp" />
     <ClCompile Include="..\..\src\WordDrawer.cpp" />
   </ItemGroup>
   <ItemGroup>
