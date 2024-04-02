@@ -21,8 +21,9 @@ protected:
 	// Variable to hold traversal outputs
 	std::ostringstream oss;
 
-	// Desired output from operator<<
+	// Desired outputs from operator<<
 	std::string desiredOutput = "{Jim:2345, Jeff:1, Joe:0, Abe:0, Erin:100}";
+	std::string desiredDebugOutput = "{Jim:2345, Jeff:1, NULL:0, NULL:0, NULL:0, NULL:0, NULL:0, Joe:0, Abe:0, Erin:100}";
 };
 
 TEST_F(UnorderedMapTestFixtureINT, InitialSizeAndCapacity) {
@@ -91,9 +92,22 @@ TEST_F(UnorderedMapTestFixtureINT, Remove) {
 
 }
 
+TEST_F(UnorderedMapTestFixtureINT, DebugPrint) {
+	oss << map.debug_print();
+	EXPECT_EQ(oss.str(), desiredDebugOutput);
+
+	map["TEST"] = 25;
+	oss << map.debug_print();
+	EXPECT_NE(oss.str(), desiredDebugOutput);
+}
+
 TEST_F(UnorderedMapTestFixtureINT, oStream) {
 	oss << map;
 	EXPECT_EQ(oss.str(), desiredOutput);
+
+	map["TEST"] = 25;
+	oss << map.debug_print();
+	EXPECT_NE(oss.str(), desiredOutput);
 }
 
 #endif
