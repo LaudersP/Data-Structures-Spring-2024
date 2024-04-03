@@ -24,6 +24,7 @@ protected:
 	// Desired outputs from operator<<
 	std::string desiredOutput = "{Jim:2345, Jeff:1, Joe:0, Abe:0, Erin:100}";
 	std::string desiredDebugOutput = "{Jim:2345, Jeff:1, NULL:0, NULL:0, NULL:0, NULL:0, NULL:0, Joe:0, Abe:0, Erin:100}";
+	std::string desiredIteratorOutput = "Jim:2345\nJeff:1\nJoe:0\nAbe:0\nErin:100\n";
 };
 
 TEST_F(UnorderedMapTestFixtureINT, InitialSizeAndCapacity) {
@@ -108,6 +109,14 @@ TEST_F(UnorderedMapTestFixtureINT, oStream) {
 	map["TEST"] = 25;
 	oss << map.debug_print();
 	EXPECT_NE(oss.str(), desiredOutput);
+}
+
+TEST_F(UnorderedMapTestFixtureINT, Iterator) {
+	for (std::pair<std::string, int> temp : map) {
+		oss << temp.first << ":" << temp.second << "\n";
+	}
+
+	EXPECT_EQ(oss.str(), desiredIteratorOutput);
 }
 
 #endif
