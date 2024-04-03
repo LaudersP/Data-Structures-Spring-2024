@@ -1,7 +1,7 @@
 #include <iostream>
 #include <functional>
 
-#define LAB_NUM 0 // 0 Runs GoogleTest
+#define LAB_NUM 8 // 0 Runs GoogleTest
 
 #if LAB_NUM == 0
 #include <gtest/gtest.h>
@@ -897,57 +897,90 @@ int main() {
 
 #elif LAB_NUM == 8
 #include <UnorderedHashMap.hpp>
+#include <fstream>
+#include <string>
+#include <algorithm>
+#include <cctype>
+
+#define BOOK_PATH "../../media/Perfect-Answer-Book.txt"
+
+ssuds::UnorderedMap<std::string, unsigned int> tokenization(const std::string& file_path);
+void frequencyChart(ssuds::UnorderedMap<std::string, unsigned int>& word_map, int N);
+bool compareByValueDesc(const std::pair<std::string, unsigned int>& a, const std::pair<std::string, unsigned int>& b);
 
 int main() {
-	ssuds::UnorderedMap<std::string, unsigned int> map(10);
-	map["Joe"];									// 1
-	map["Erin"];								// 2
-	map["Abe"];									// 3
-	map["HAHA"] = 11;							// 4
-	std::cout << "Size: " << map.size() <<"\n";
-	std::cout << "Capacity: " << map.capacity() << "\n";
-	map.debug_print();
+	ssuds::UnorderedMap<std::string, unsigned int> map = tokenization(BOOK_PATH);
+	frequencyChart(map, 25);
+}
 
-	map["Joe"] = 123;
-	std::cout << "Size: " << map.size() << "\n";
-	std::cout << "Capacity: " << map.capacity() << "\n";
-	map.debug_print();
+ssuds::UnorderedMap<std::string, unsigned int> tokenization(const std::string& file_path) {
+	std::ifstream file(file_path);
+	ssuds::UnorderedMap<std::string, unsigned int> map;
+	std::string line;
+	unsigned int wordCount = 0;
 
-	map["Test1"] = 4;							// 5
-	map["Test2"] = 3;							// 6
-	std::cout << "Size: " << map.size() << "\n";
-	std::cout << "Capacity: " << map.capacity() << "\n";
-	map.debug_print();
-
-	map["test3"] = 1;
-	std::cout << "Size: " << map.size() << "\n";
-	std::cout << "Capacity: " << map.capacity() << "\n";
-	std::cout << map;
-
-	for (std::pair<std::string, int> temp : map) {
-		std::cout << temp.first << ":" << temp.second << "\n";
+	// Check if file opened properly
+	if (!file.is_open()) {
+		std::cout << "Failed to open file." << std::endl;
+		return map;
 	}
 
-	std::cout << "\nFinding \'Joe\': " << map.contains("Joe") << "\n";
-	std::cout << "Finding \'NOPE\': " << map.contains("NOPE") << "\n";
+	// Loop through each line of the text file
+	while (std::getline(file, line)) {
+		std::string word;
 
-	ssuds::UnorderedMap<std::string, unsigned int>::UnorderedMapIterator iter = map.find("Joe");
+		// Loop through each character in each line
+		for (size_t i = 0; i < line.length(); ++i) {
+			// Check if 'i' is a letter, or ' following a letter
+			if (std::isalpha(line[i]) || i > 0 && (std::isalpha(line[i - 1]) && line[i] == '\'')) {
+				// Check if lower casing is needed
+				if (std::isupper(line[i]))
+					word += std::tolower(line[i]);
+				else
+					word += line[i];
+			}
+			// If it's space or punctuation, print the word if it's not empty
+			else if (word.length() > 0 && (std::isspace(line[i]) || std::ispunct(line[i]))) {
+				map[word]++;
+				wordCount++;
+				word = "";
+			}
+			else {
+				// Check if the word is NULL
+				if (word != "") {
+					map[word]++;
+					wordCount++;
+				}
+			}
+		}
 
-	if (iter != map.end()) {
-		std::pair<std::string, unsigned int> element = *iter;
-
-		std::cout << "Found 'Joe': " << element.first << " = " << element.second << "\n";
 	}
-	else
-		std::cout << "'Joe' not found in the map.\n";
 
-	map.remove(iter);
-	std::cout << "\n";
+	file.close();
 
-	for (std::pair<std::string, int> temp : map) {
-		std::cout << temp.first << ":" << temp.second << "\n";
+	std::cout << wordCount << " words processed\n";
+	return map;
+}
+
+void frequencyChart(ssuds::UnorderedMap<std::string, unsigned int>& word_map, int N) {
+	std::pair<std::string, unsigned int>* allPairs = new std::pair<std::string, unsigned int>[word_map.size()];
+	int index = 0;
+
+	// Iterate through map
+	for (std::pair<std::string, int> temp : word_map) {
+		allPairs[index++] = temp;
+	}
+
+	std::sort(allPairs, allPairs + word_map.size(), compareByValueDesc);
+
+	// Print the top 'n' results
+	for (int i = 0; i < N; ++i) {
+		std::cout << (i + 1) << ") " << allPairs[i].first << " [" << allPairs[i].second << "]\n";
 	}
 }
 
+bool compareByValueDesc(const std::pair<std::string, unsigned int>& a, const std::pair<std::string, unsigned int>& b) {
+	return a.second > b.second;
+}
 
 #endif
