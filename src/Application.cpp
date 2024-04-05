@@ -1,7 +1,7 @@
 #include <iostream>
 #include <functional>
 
-#define LAB_NUM 8 // 0 Runs GoogleTest
+#define LAB_NUM 9 // 0 Runs GoogleTest
 
 #if LAB_NUM == 0
 #include <gtest/gtest.h>
@@ -981,6 +981,29 @@ void frequencyChart(ssuds::UnorderedMap<std::string, unsigned int>& word_map, in
 
 bool compareByValueDesc(const std::pair<std::string, unsigned int>& a, const std::pair<std::string, unsigned int>& b) {
 	return a.second > b.second;
+}
+
+#elif LAB_NUM 9
+#include <Graph.hpp>
+
+int main() {
+	ssuds::Graph<std::string, float> G;
+	G.add_node("A");
+	G.add_node("B");
+	G.add_node("C");
+	G.add_node("D");
+	G.add_edge("A", "B", 3.4f);
+	G.add_edge("A", "D", 2.5f);
+	G.add_edge("B", "C", 3.14f);
+
+	std::cout << "Search (A): " << (G.contains_node("A") ? "Found!" : "Missing!") << "\n";
+	std::cout << "Search (B): " << (G.contains_node("B") ? "Found!" : "Missing!") << "\n";
+	std::cout << "Search (C): " << (G.contains_node("C") ? "Found!" : "Missing!") << "\n";
+	std::cout << "Search (D): " << (G.contains_node("D") ? "Found!" : "Missing!") << "\n";
+	std::cout << "Search (A -> B): " << (G.contains_edge("A", "B") ? "Found!" : "Missing!") << "\n";
+	std::cout << "Search (A -> D): " << (G.contains_edge("A", "D") ? "Found!" : "Missing!") << "\n";
+	std::cout << "Search (B -> C): " << (G.contains_edge("B", "C") ? "Found!" : "Missing!") << "\n";
+	std::cout << "Search (C -> D): " << (G.contains_edge("C", "D") ? "Found!" : "Missing!") << "\n";
 }
 
 #endif
