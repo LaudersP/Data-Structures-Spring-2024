@@ -73,7 +73,7 @@ namespace ssuds {
 			* @param map The UnorderedMap to iterate over.
 			* @param i The initial index.
 			*/
-			UnorderedMapIterator(UnorderedMap* map, int i) : _ptr(map), _index(i) {
+			UnorderedMapIterator(const UnorderedMap* map, int i) : _ptr(const_cast<UnorderedMap*>(map)), _index(i) {
 				moveIndex();
 			}
 
@@ -186,8 +186,10 @@ namespace ssuds {
 			}
 
 			// Check if 60% of the capacity is used
-			if (_size >= (_capacity * 0.6))
+			if (_size >= (_capacity * 0.6)) {
+				desiredLocation = hashLocation(key);
 				grow();
+			}
 
 			_tableUsed[desiredLocation] = true;
 			_tableData[desiredLocation].first = key;
@@ -221,13 +223,7 @@ namespace ssuds {
 		* @return True if the key is found, false otherwise.
 		*/
 		bool contains(const K& key) const {
-			int result = locateKey(key);
-
-			// Check if the key was located
-			if (result == -1)
-				return false;
-			else
-				return true;
+			return locateKey(key) != -1;
 		}
 
 		/**
@@ -241,10 +237,10 @@ namespace ssuds {
 			int result = locateKey(key);
 
 			// Check if the key was located
-			if (result == -1)
-				return end();
-			else
+			if (result != -1)
 				return UnorderedMapIterator(const_cast<UnorderedMap*>(this), result);
+			else
+				return end();
 		}
 
 		/**
@@ -313,10 +309,8 @@ namespace ssuds {
 		*
 		* @return An iterator pointing to the beginning of the map.
 		*/
-		UnorderedMapIterator begin() {
-			UnorderedMapIterator iter(this, 0);
-
-			return iter;
+		UnorderedMapIterator begin() const {
+			return UnorderedMapIterator(this, 0);
 		}
 
 		/**
@@ -325,7 +319,7 @@ namespace ssuds {
 		* @return An iterator pointing to the end of the map.
 		*/
 		UnorderedMapIterator end() const {
-			return UnorderedMapIterator(const_cast<UnorderedMap*>(this), _capacity);
+			return UnorderedMapIterator(this, _capacity);
 		}
 
 
@@ -401,6 +395,9 @@ namespace ssuds {
 
 			_tableData = new std::pair<K, V>[_capacity];
 			_tableUsed = new bool[_capacity];
+
+			for (unsigned int i = 0; i < _capacity; i++)
+				_tableUsed[i] = false;
 
 			_size = 0;
 
