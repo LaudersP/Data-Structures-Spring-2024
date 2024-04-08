@@ -1,7 +1,7 @@
 #include <iostream>
 #include <functional>
 
-#define LAB_NUM 9 // 0 Runs GoogleTest
+#define LAB_NUM 0 // 0 Runs GoogleTest
 
 #if LAB_NUM == 0
 #include <gtest/gtest.h>
@@ -996,14 +996,27 @@ int main() {
 	G.add_edge("A", "D", 2.5f);
 	G.add_edge("B", "C", 3.14f);
 
-	std::cout << "Search (A): " << (G.contains_node("A") ? "Found!" : "Missing!") << "\n";
-	std::cout << "Search (B): " << (G.contains_node("B") ? "Found!" : "Missing!") << "\n";
-	std::cout << "Search (C): " << (G.contains_node("C") ? "Found!" : "Missing!") << "\n";
-	std::cout << "Search (D): " << (G.contains_node("D") ? "Found!" : "Missing!") << "\n";
-	std::cout << "Search (A -> B): " << (G.contains_edge("A", "B") ? "Found!" : "Missing!") << "\n";
-	std::cout << "Search (A -> D): " << (G.contains_edge("A", "D") ? "Found!" : "Missing!") << "\n";
-	std::cout << "Search (B -> C): " << (G.contains_edge("B", "C") ? "Found!" : "Missing!") << "\n";
-	std::cout << "Search (C -> D): " << (G.contains_edge("C", "D") ? "Found!" : "Missing!") << "\n";
+	std::cout << "Search (A): " << (G.contains_node("A") ? "Found!" : "Missing!") << "\n";				// Found
+	std::cout << "Search (B): " << (G.contains_node("B") ? "Found!" : "Missing!") << "\n";				// Found
+	std::cout << "Search (C): " << (G.contains_node("C") ? "Found!" : "Missing!") << "\n";				// Found
+	std::cout << "Search (D): " << (G.contains_node("D") ? "Found!" : "Missing!") << "\n";				// Found
+	std::cout << "Search (A -> B): " << (G.contains_edge("A", "B") ? "Found!" : "Missing!") << "\n";	// Found
+	std::cout << "Search (A -> D): " << (G.contains_edge("A", "D") ? "Found!" : "Missing!") << "\n";	// Found
+	std::cout << "Search (B -> C): " << (G.contains_edge("B", "C") ? "Found!" : "Missing!") << "\n";	// Found
+	std::cout << "Search (C -> D): " << (G.contains_edge("C", "D") ? "Found!" : "Missing!") << "\n";	// Missing
+
+	std::cout << "\n---- Remove Tests ----\n";
+
+	G.remove_node("D");
+	std::cout << "Search (D): " << (G.contains_node("D") ? "Found!" : "Missing!") << "\n";				// Missing
+
+	G.remove_edge("A", "B");
+	std::cout << "Search (A -> B): " << (G.contains_edge("A", "B") ? "Found!" : "Missing!") << "\n";	// Missing
+
+	std::cout << "\n---- Getter Tests ----\n";
+	std::cout << G.get_edge("B", "C");																	// 3.14
+
+	return 0;
 }
 
 #endif
