@@ -2,7 +2,7 @@
 
 #if EXECUTE_TESTS
 #include <gtest/gtest.h>
-#include <Graph.hpp>
+#include <Graph_v2.hpp>
 
 class GraphTestFixture : public testing::Test {
 protected:
@@ -19,6 +19,9 @@ protected:
 
 	// Variable to hold traversal outputs
 	std::ostringstream oss;
+
+	// Desired oss output
+	std::string desriredOutput = "Q |\nA |\nZ | (Q:5.9)\nB |\n";
 };
 
 TEST_F(GraphTestFixture, containsNode) {
@@ -63,7 +66,8 @@ TEST_F(GraphTestFixture, GetEdge) {
 }
 
 TEST_F(GraphTestFixture, OSTREAM) {
-	std::cout << G;
+	oss << G;
+	ASSERT_EQ(oss.str(), desriredOutput);
 }
 
 #endif
