@@ -172,7 +172,8 @@ namespace ssuds {
 		*
 		* @return The value associated with the key.
 		*/
-		V& operator[] (const K& key) {
+		V& operator[] (const K& key)
+		{
 			unsigned int desiredLocation = hashLocation(key);
 
 			// Loop from the desired location to the next empty slot
@@ -187,8 +188,18 @@ namespace ssuds {
 
 			// Check if 60% of the capacity is used
 			if (_size >= (_capacity * 0.6)) {
-				desiredLocation = hashLocation(key);
 				grow();
+				desiredLocation = hashLocation(key);
+
+				// Loop from the desired location to the next empty slot
+				while (_tableUsed[desiredLocation] == true) {
+					// Check if the key in that slot is the desired key
+					if (_tableData[desiredLocation].first == key) {
+						return _tableData[desiredLocation].second;
+					}
+
+					desiredLocation = (desiredLocation + 1) % _capacity;
+				}
 			}
 
 			_tableUsed[desiredLocation] = true;
@@ -249,15 +260,19 @@ namespace ssuds {
 		* @param iter The iterator pointing to the pair to be removed.
 		*/
 		void remove(const UnorderedMapIterator& iter) {
-			int index = iter.index();
+			//int index = iter.index();
 
-			// Check for a valid index and that the slot is used
-			if (index >= 0 && index < _capacity && _tableUsed[index]) {
-				_tableUsed[index] = false;
-				_size--;
+			//// Check for a valid index and that the slot is used
+			//if (index >= 0 && index < _capacity && _tableUsed[index]) {
+			//	_tableUsed[index] = false;
+			//	_size--;
 
-				removeRehash();
-			}
+			//	removeRehash();
+			//}
+
+			
+			// Take from the desired node to the next null and extract
+			// Then add every thing extracted (but the desired node) back into the graph
 		}
 
 		/**
@@ -383,33 +398,6 @@ namespace ssuds {
 			}
 
 			return -1;
-		}
-
-		/**
-		* @brief Rehashes the map after a removal.
-		*/
-		void removeRehash() {
-			std::pair<K, V>* oldTableData = _tableData;
-			bool* oldTableUsed = _tableUsed;
-			unsigned int oldCapacity = _capacity;
-
-			_tableData = new std::pair<K, V>[_capacity];
-			_tableUsed = new bool[_capacity];
-
-			for (unsigned int i = 0; i < _capacity; i++)
-				_tableUsed[i] = false;
-
-			_size = 0;
-
-			// Loop through the old map
-			for (unsigned int i = 0; i < oldCapacity; i++) {
-				// Check if the old map slot is filled
-				if (oldTableUsed[i] == true)
-					(*this)[oldTableData[i].first] = oldTableData[i].second;
-			}
-
-			delete[] oldTableData;
-			delete[] oldTableUsed;
 		}
 	};
 }
