@@ -1015,6 +1015,23 @@ int main() {
 		}
 
 		window.clear();
+		ssuds::ArrayListV2<std::tuple<int, int, float>> all_edges = edges.get_all_edges();
+
+		// Iterate through and draw edges
+		for (const std::tuple<int, int, float>& edge : all_edges) {
+			int startId = std::get<0>(edge);
+			int endId = std::get<1>(edge);
+			sf::Vector2f startPos, endPos;
+
+			// Validate and retrieve positions
+			if (startId >= 0 && startId < nodes.Size() && endId >= 0 && endId < nodes.Size()) {
+				startPos = nodes[startId].get_position();
+				endPos = nodes[endId].get_position();
+
+				sf::TextCircle instance;
+				instance.drawArrow(window, startPos, endPos);
+			}
+		}
 
 		// Iterate through and draw nodes
 		for (sf::TextCircle& temp : nodes) {
