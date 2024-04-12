@@ -991,16 +991,16 @@ bool compareByValueDesc(const std::pair<std::string, unsigned int>& a, const std
 #define FILE_PATH "../../media/sample-map.txt"
 
 int main() {
-	sf::TextCircle game;
-	ssuds::ArrayListV2<sf::TextCircle> nodes;
-	ssuds::Graph<int, float> edges;
-
 	sf::Font font;
+
+	// Check that the font was loaded
 	if (!font.loadFromFile("../../media/fonts/stars-mounth/Stars-mouth.ttf"))
 		throw std::exception("ERROR: Unable to properly load font!\n");
 
+	sf::TextCircle game;
+	ssuds::ArrayListV2<sf::TextCircle> nodes;
+	ssuds::Graph<int, float> edges;
 	game.readFromFile(FILE_PATH, font, nodes, edges);
-
 	sf::RenderWindow window(sf::VideoMode(800, 600), "Graph Visualization");
 
 	// Main loop
