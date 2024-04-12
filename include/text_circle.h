@@ -1,6 +1,8 @@
 #pragma once
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/Text.hpp>
+#include <Array_List_v2.hpp>
+#include <Graph_V2.hpp>
 
 namespace sf
 {
@@ -95,6 +97,6 @@ namespace sf
 		/// Load and show a Graph
 		/// </summary>
 		/// <param name="file_path">The file path to the Graph code</param>
-		void displayGraph(const std::string& file_path);
+		void readFromFile(const std::string& file_path, const sf::Font& font, ssuds::ArrayListV2<TextCircle>& nodes, ssuds::Graph<int, float>& edges);
 	};
 }

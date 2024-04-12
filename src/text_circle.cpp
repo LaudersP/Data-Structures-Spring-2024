@@ -1,8 +1,7 @@
 #include <text_circle.h>
 #include <SFML/Graphics.hpp>
 #include <fstream>
-#include <Graph_v2.hpp>
-
+#include <sstream>
 #include <iostream>
 
 
@@ -27,7 +26,7 @@ sf::TextCircle::TextCircle(float x, float y, const Font& font_ref, std::string t
 	mText.setPosition(sf::Vector2f(x, y));
 
 	// Set the position / radius of the circle
-	float radius = (mTextRect.width > mTextRect.height ? mTextRect.width : mTextRect.height) / 2.0f;
+	float radius = (mTextRect.width > mTextRect.height ? mTextRect.width : mTextRect.height) / 2.0f + 5;
 	mCircle.setPosition(x - radius, y - radius);
 	mCircle.setFillColor(sf::Color(rand() % 128 + 127, rand() % 128 + 127, rand() % 128 + 127, 255));
 	mCircle.setRadius(radius);
@@ -72,20 +71,65 @@ bool sf::TextCircle::point_inside(sf::Vector2f v) const
 	return dist <= mCircle.getRadius();
 }
 
-void sf::TextCircle::displayGraph(const std::string& file_path) {
+void sf::TextCircle::readFromFile(const std::string& file_path, const sf::Font& font, ssuds::ArrayListV2<TextCircle>& nodes, ssuds::Graph<int, float>& edges) {
 	std::ifstream file(file_path);
-	std::string line;
 
 	// Check that the file was properly opened
 	if (!file.is_open())
 		throw std::exception("ERROR: Could not open the file!\n");
 
+	std::string line;
+	//ssuds::ArrayListV2<TextCircle> nodes;
+	//ssuds::Graph<int, float> edges;
+
 	// Loop through the file by lines
 	while (std::getline(file, line)) {
-		// Process the line or display it
-		std::cout << line << std::endl;
+		std::stringstream dataLine(line);
+		std::string type;
+		std::getline(dataLine, type, ':');
+
+		// Check if the data line is a node
+		if (type == 'n') {
+			int id, r, g, b;
+			float x, y;
+			std::string temp, label;
+
+			std::getline(dataLine, temp, ':');
+			id = std::stoi(temp);
+			std::getline(dataLine, label, ':');
+			std::getline(dataLine, temp, ':');
+			r = std::stoi(temp);
+			std::getline(dataLine, temp, ':');
+			g = std::stoi(temp);
+			std::getline(dataLine, temp, ':');
+			b = std::stoi(temp);
+			std::getline(dataLine, temp, ':');
+			x = std::stof(temp);
+			std::getline(dataLine, temp, ':');
+			y = std::stof(temp);
+
+			sf::Color color(r, g, b);
+			TextCircle node(x, y, font, label);
+			node.setCircleColor(color);
+			nodes.Append(node);
+			edges.add_node(id);
+		}
+		// Check if the data line is a edge
+		else if (type == 'e') {
+			int startID, endID;
+			float value;
+			std::string temp;
+
+			std::getline(dataLine, temp, ':');
+			startID = std::stoi(temp);
+			std::getline(dataLine, temp, ':');
+			endID = std::stoi(temp);
+			std::getline(dataLine, temp, ':');
+			value = std::stof(temp);
+
+			edges.add_edge(startID, endID, value);
+		}
+		else
+			throw std::exception("ERROR: Unknown data type!\n");
 	}
-
-	file.close();
-
 }
