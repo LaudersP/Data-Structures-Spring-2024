@@ -1,7 +1,6 @@
 #include <iostream>
-#include <functional>
 
-#define LAB_NUM 0 // 0 Runs GoogleTest
+#define LAB_NUM 9 // 0 Runs GoogleTest
 
 #if LAB_NUM == 0
 #include <gtest/gtest.h>
@@ -984,39 +983,46 @@ bool compareByValueDesc(const std::pair<std::string, unsigned int>& a, const std
 }
 
 #elif LAB_NUM 9
+#include <SFML/Graphics.hpp>
+#include <text_circle.h>
+#include <Array_List_v2.hpp>
 #include <Graph.hpp>
 
+#define FILE_PATH "../../media/sample-map.txt"
+
 int main() {
-	ssuds::Graph<std::string, float> G;
-	G.add_node("A");
-	G.add_node("B");
-	G.add_node("C");
-	G.add_node("D");
-	G.add_edge("A", "B", 3.4f);
-	G.add_edge("A", "D", 2.5f);
-	G.add_edge("B", "C", 3.14f);
+	sf::TextCircle game;
+	ssuds::ArrayListV2<sf::TextCircle> nodes;
+	ssuds::Graph<int, float> edges;
 
-	std::cout << "Search (A): " << (G.contains_node("A") ? "Found!" : "Missing!") << "\n";				// Found
-	std::cout << "Search (B): " << (G.contains_node("B") ? "Found!" : "Missing!") << "\n";				// Found
-	std::cout << "Search (C): " << (G.contains_node("C") ? "Found!" : "Missing!") << "\n";				// Found
-	std::cout << "Search (D): " << (G.contains_node("D") ? "Found!" : "Missing!") << "\n";				// Found
-	std::cout << "Search (A -> B): " << (G.contains_edge("A", "B") ? "Found!" : "Missing!") << "\n";	// Found
-	std::cout << "Search (A -> D): " << (G.contains_edge("A", "D") ? "Found!" : "Missing!") << "\n";	// Found
-	std::cout << "Search (B -> C): " << (G.contains_edge("B", "C") ? "Found!" : "Missing!") << "\n";	// Found
-	std::cout << "Search (C -> D): " << (G.contains_edge("C", "D") ? "Found!" : "Missing!") << "\n";	// Missing
+	sf::Font font;
+	if (!font.loadFromFile("../../media/fonts/stars-mounth/Stars-mouth.ttf"))
+		throw std::exception("ERROR: Unable to properly load font!\n");
 
-	std::cout << "\n---- Remove Tests ----\n";
+	game.readFromFile(FILE_PATH, font, nodes, edges);
 
-	G.remove_node("D");
-	std::cout << "Search (D): " << (G.contains_node("D") ? "Found!" : "Missing!") << "\n";				// Missing
+	sf::RenderWindow window(sf::VideoMode(800, 600), "Graph Visualization");
 
-	G.remove_edge("A", "B");
-	std::cout << "Search (A -> B): " << (G.contains_edge("A", "B") ? "Found!" : "Missing!") << "\n";	// Missing
+	// Main loop
+	while (window.isOpen()) {
+		sf::Event event;
 
-	std::cout << "\n---- Getter Tests ----\n";
-	std::cout << G.get_edge("B", "C");																	// 3.14
+		// Poll events
+		while (window.pollEvent(event)) {
+			// Check if window close is desired
+			if (event.type == sf::Event::Closed)
+				window.close();
+		}
 
-	return 0;
+		window.clear();
+
+		// Iterate through and draw nodes
+		for (sf::TextCircle& temp : nodes) {
+			window.draw(temp);
+		}
+
+		window.display();
+	}
 }
 
 #endif
