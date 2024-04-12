@@ -1,8 +1,10 @@
 #pragma once
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/Text.hpp>
+#include <SFML/Graphics.hpp>
 #include <Array_List_v2.hpp>
 #include <Graph_V2.hpp>
+#include <cmath>
 
 namespace sf
 {
@@ -98,5 +100,7 @@ namespace sf
 		/// </summary>
 		/// <param name="file_path">The file path to the Graph code</param>
 		void readFromFile(const std::string& file_path, const sf::Font& font, ssuds::ArrayListV2<TextCircle>& nodes, ssuds::Graph<int, float>& edges);
+
+		void drawArrow(sf::RenderWindow& window, const sf::Vector2f& startPos, const sf::Vector2f& endPos);
 	};
 }

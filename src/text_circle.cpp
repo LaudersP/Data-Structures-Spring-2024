@@ -133,3 +133,32 @@ void sf::TextCircle::readFromFile(const std::string& file_path, const sf::Font& 
 			throw std::exception("ERROR: Unknown data type!\n");
 	}
 }
+
+void sf::TextCircle::drawArrow(sf::RenderWindow& window, const sf::Vector2f& startPos, const sf::Vector2f& endPos) {
+	sf::Vector2f direction = endPos - startPos;
+	float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);
+	sf::Vector2f unitDirection = direction / length;
+	sf::Vector2f unitPerpendicular(-unitDirection.y, unitDirection.x);
+
+	float arrowLength = 20; // Length of the arrow head
+	float arrowWidth = 10;  // Width of the arrow head
+
+	sf::Vector2f arrowPoint1 = endPos - arrowLength * unitDirection + unitPerpendicular * arrowWidth / 2.f;
+	sf::Vector2f arrowPoint2 = endPos - arrowLength * unitDirection - unitPerpendicular * arrowWidth / 2.f;
+
+	// Draw line
+	sf::Vertex line[] = {
+		sf::Vertex(startPos, sf::Color::White),
+		sf::Vertex(endPos - arrowLength * unitDirection, sf::Color::White) // Shorten line to not overlap with arrowhead
+	};
+
+	// Draw arrowhead
+	sf::Vertex arrow[] = {
+		sf::Vertex(endPos, sf::Color::White),
+		sf::Vertex(arrowPoint1, sf::Color::White),
+		sf::Vertex(arrowPoint2, sf::Color::White)
+	};
+
+	window.draw(line, 2, sf::Lines);
+	window.draw(arrow, 3, sf::Triangles);
+}
