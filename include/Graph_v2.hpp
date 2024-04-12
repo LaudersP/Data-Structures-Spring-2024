@@ -3,6 +3,7 @@
 
 #include <unordered_map>
 #include <stdexcept>
+#include <Array_List_v2.hpp>
 
 namespace ssuds {
 	template <class N, class E>
@@ -163,6 +164,26 @@ namespace ssuds {
 			}
 
 			return os;
+		}
+
+		/**
+		* @brief Allows the user to get the complete graph's edges as an array
+		* 
+		* @return the array version of the graph
+		*/
+		ssuds::ArrayListV2 <std::tuple<N, N, E>> get_all_edges() const {
+			ssuds::ArrayListV2<std::tuple<N, N, E>> edge_list;
+
+			// Iterate through the nodes
+			for (const auto& node_iter : _data) {
+				// Iterate through the edges
+				for (const auto& edge_iter : node_iter.second) {
+					edge_list.Append(std::make_tuple(node_iter.first, edge_iter.first, edge_iter.second));
+				}
+
+			}
+
+			return edge_list;
 		}
 	};
 }
