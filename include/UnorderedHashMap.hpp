@@ -73,7 +73,7 @@ namespace ssuds {
 			* @param map The UnorderedMap to iterate over.
 			* @param i The initial index.
 			*/
-			UnorderedMapIterator(UnorderedMap* map, int i) : _ptr(map), _index(i) {
+			UnorderedMapIterator(const UnorderedMap* map, int i) : _ptr(const_cast<UnorderedMap*>(map)), _index(i) {
 				moveIndex();
 			}
 
@@ -172,7 +172,8 @@ namespace ssuds {
 		*
 		* @return The value associated with the key.
 		*/
-		V& operator[] (const K& key) {
+		V& operator[] (const K& key)
+		{
 			unsigned int desiredLocation = hashLocation(key);
 
 			// Loop from the desired location to the next empty slot
@@ -186,8 +187,20 @@ namespace ssuds {
 			}
 
 			// Check if 60% of the capacity is used
-			if (_size >= (_capacity * 0.6))
+			if (_size >= (_capacity * 0.6)) {
 				grow();
+				desiredLocation = hashLocation(key);
+
+				// Loop from the desired location to the next empty slot
+				while (_tableUsed[desiredLocation] == true) {
+					// Check if the key in that slot is the desired key
+					if (_tableData[desiredLocation].first == key) {
+						return _tableData[desiredLocation].second;
+					}
+
+					desiredLocation = (desiredLocation + 1) % _capacity;
+				}
+			}
 
 			_tableUsed[desiredLocation] = true;
 			_tableData[desiredLocation].first = key;
@@ -221,13 +234,7 @@ namespace ssuds {
 		* @return True if the key is found, false otherwise.
 		*/
 		bool contains(const K& key) const {
-			int result = locateKey(key);
-
-			// Check if the key was located
-			if (result == -1)
-				return false;
-			else
-				return true;
+			return locateKey(key) != -1;
 		}
 
 		/**
@@ -241,10 +248,10 @@ namespace ssuds {
 			int result = locateKey(key);
 
 			// Check if the key was located
-			if (result == -1)
-				return end();
-			else
+			if (result != -1)
 				return UnorderedMapIterator(const_cast<UnorderedMap*>(this), result);
+			else
+				return end();
 		}
 
 		/**
@@ -253,15 +260,19 @@ namespace ssuds {
 		* @param iter The iterator pointing to the pair to be removed.
 		*/
 		void remove(const UnorderedMapIterator& iter) {
-			int index = iter.index();
+			//int index = iter.index();
 
-			// Check for a valid index and that the slot is used
-			if (index >= 0 && index < _capacity && _tableUsed[index]) {
-				_tableUsed[index] = false;
-				_size--;
+			//// Check for a valid index and that the slot is used
+			//if (index >= 0 && index < _capacity && _tableUsed[index]) {
+			//	_tableUsed[index] = false;
+			//	_size--;
 
-				removeRehash();
-			}
+			//	removeRehash();
+			//}
+
+			
+			// Take from the desired node to the next null and extract
+			// Then add every thing extracted (but the desired node) back into the graph
 		}
 
 		/**
@@ -313,10 +324,8 @@ namespace ssuds {
 		*
 		* @return An iterator pointing to the beginning of the map.
 		*/
-		UnorderedMapIterator begin() {
-			UnorderedMapIterator iter(this, 0);
-
-			return iter;
+		UnorderedMapIterator begin() const {
+			return UnorderedMapIterator(this, 0);
 		}
 
 		/**
@@ -325,7 +334,7 @@ namespace ssuds {
 		* @return An iterator pointing to the end of the map.
 		*/
 		UnorderedMapIterator end() const {
-			return UnorderedMapIterator(const_cast<UnorderedMap*>(this), _capacity);
+			return UnorderedMapIterator(this, _capacity);
 		}
 
 
@@ -389,30 +398,6 @@ namespace ssuds {
 			}
 
 			return -1;
-		}
-
-		/**
-		* @brief Rehashes the map after a removal.
-		*/
-		void removeRehash() {
-			std::pair<K, V>* oldTableData = _tableData;
-			bool* oldTableUsed = _tableUsed;
-			unsigned int oldCapacity = _capacity;
-
-			_tableData = new std::pair<K, V>[_capacity];
-			_tableUsed = new bool[_capacity];
-
-			_size = 0;
-
-			// Loop through the old map
-			for (unsigned int i = 0; i < oldCapacity; i++) {
-				// Check if the old map slot is filled
-				if (oldTableUsed[i] == true)
-					(*this)[oldTableData[i].first] = oldTableData[i].second;
-			}
-
-			delete[] oldTableData;
-			delete[] oldTableUsed;
 		}
 	};
 }

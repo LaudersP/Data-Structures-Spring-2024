@@ -1,7 +1,6 @@
 #include <iostream>
-#include <functional>
 
-#define LAB_NUM 8 // 0 Runs GoogleTest
+#define LAB_NUM 9 // 0 Runs GoogleTest
 
 #if LAB_NUM == 0
 #include <gtest/gtest.h>
@@ -981,6 +980,66 @@ void frequencyChart(ssuds::UnorderedMap<std::string, unsigned int>& word_map, in
 
 bool compareByValueDesc(const std::pair<std::string, unsigned int>& a, const std::pair<std::string, unsigned int>& b) {
 	return a.second > b.second;
+}
+
+#elif LAB_NUM 9
+#include <SFML/Graphics.hpp>
+#include <text_circle.h>
+#include <Array_List_v2.hpp>
+#include <Graph.hpp>
+
+#define FILE_PATH "../../media/sample-map.txt"
+
+int main() {
+	sf::Font font;
+
+	// Check that the font was loaded
+	if (!font.loadFromFile("../../media/fonts/stars-mounth/Stars-mouth.ttf"))
+		throw std::exception("ERROR: Unable to properly load font!\n");
+
+	sf::TextCircle game;
+	ssuds::ArrayListV2<sf::TextCircle> nodes;
+	ssuds::Graph<int, float> edges;
+	game.readFromFile(FILE_PATH, font, nodes, edges);
+	sf::RenderWindow window(sf::VideoMode(800, 600), "Graph Visualization");
+
+	// Main loop
+	while (window.isOpen()) {
+		sf::Event event;
+
+		// Poll events
+		while (window.pollEvent(event)) {
+			// Check if window close is desired
+			if (event.type == sf::Event::Closed)
+				window.close();
+		}
+
+		window.clear();
+		ssuds::ArrayListV2<std::tuple<int, int, float>> all_edges = edges.get_all_edges();
+
+		// Iterate through and draw edges
+		for (const std::tuple<int, int, float>& edge : all_edges) {
+			int startId = std::get<0>(edge);
+			int endId = std::get<1>(edge);
+			sf::Vector2f startPos, endPos;
+
+			// Validate and retrieve positions
+			if (startId >= 0 && startId < nodes.Size() && endId >= 0 && endId < nodes.Size()) {
+				startPos = nodes[startId].get_position();
+				endPos = nodes[endId].get_position();
+
+				sf::TextCircle instance;
+				instance.drawArrow(window, startPos, endPos);
+			}
+		}
+
+		// Iterate through and draw nodes
+		for (sf::TextCircle& temp : nodes) {
+			window.draw(temp);
+		}
+
+		window.display();
+	}
 }
 
 #endif

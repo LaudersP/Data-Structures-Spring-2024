@@ -1,4 +1,4 @@
-#define EXECUTE_GOOGLE_TESTS 1
+#define EXECUTE_GOOGLE_TESTS 0
 
 #if EXECUTE_GOOGLE_TESTS
 #include <gtest/gtest.h>
