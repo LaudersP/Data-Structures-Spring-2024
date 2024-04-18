@@ -9,6 +9,7 @@
 #include <fstream>
 #include <string>
 #include <array_list.h>
+#include <queue.h>
 
 namespace misc
 {
@@ -62,6 +63,25 @@ namespace misc
 		/// <returns></returns>
 		void load(const std::string& fname);
 
-		void handleMouseClick(const float X, const float Y, bool end = false);
+		/// <summary>
+		/// Checks if the passed cordinates of the moust click where on a node,
+		/// if it was add it to an array for handling
+		/// </summary>
+		/// <param name="X"></param>
+		/// <param name="Y"></param>
+		/// <param name="end"></param>
+		ssuds::ArrayList<int> handleMouseClick(const float X, const float Y, bool end = false);
+
+		/// <summary>
+		/// Calls the Breath First traversal to the internal graph of nodes
+		/// </summary>
+		/// <param name="traversalMap"></param>
+		void breadthFirstTraversal(ssuds::ArrayList<std::pair<int, int>>& traversalMap);
+
+		/// <summary>
+		/// Calls the Depth First traversal to the internal graph of nodes
+		/// </summary>
+		/// <param name="traversalMap"></param>
+		void depthFirstTraversal(ssuds::ArrayList<std::pair<int, int>>& traversalMap);
 	};
 }

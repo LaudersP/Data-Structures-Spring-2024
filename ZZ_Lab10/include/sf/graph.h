@@ -1,5 +1,7 @@
 #pragma once
 #include <unordered_map.h>
+#include <queue.h>
+#include <stack.h>
 #include <sstream>
 
 namespace ssuds
@@ -257,6 +259,91 @@ namespace ssuds
 			}
 
 			return os;
+		}
+		
+		/////////////////////////
+		//   TRAVERSAL ITEMS   //
+		/////////////////////////
+
+		/// <summary>
+		/// Used to call a Breath First traversal on the graph
+		/// </summary>
+		/// <param name="traversalMap"></param>
+		/// <param name="startNode"></param>
+		void breadthFirst(ssuds::ArrayList<std::pair<N, N>>& traversalMap, N startNode) {
+			// Check that startNode is valid
+			if (!contains_node(startNode))
+				throw std::out_of_range("ERROR: Start node does not exist in the graph!\n");
+
+			ssuds::Queue<N> frontier;
+			ssuds::UnorderedMap<N, bool> visted;
+			traversalMap.clear();
+
+			frontier.enqueue(startNode);
+			visted[startNode] = true;
+			traversalMap.append(std::make_pair(startNode, N()));
+
+			// Loop through the queue
+			while (frontier.size() > 0) {
+				N current = frontier.dequeue();
+				typename UnorderedMap<N, UnorderedMap<N, E>>::UnorderedMapIterator it = mData.find(current);
+
+				// Check that the iterator is valid
+				if (it != mData.end()) {
+					// Iterate through the current nodes edges
+					for (std::pair<N, E>& edges : (*it).second) {
+						N neighbor = edges.first;
+
+						// Check if that node has been visted or not
+						if (!visted[neighbor]) {
+							visted[neighbor] = true;
+							frontier.enqueue(neighbor);
+							traversalMap.append(std::make_pair(neighbor, current));
+						}
+					}
+				}
+			}
+		}
+
+		/// <summary>
+		/// Used to call a Depth First traversal on the graph
+		/// </summary>
+		/// <param name="traversalMap"></param>
+		/// <param name="startNode"></param>
+		void depthFirst(ssuds::ArrayList<std::pair<N, N>>& traversalMap, N startNode) {
+			// Check that startNode is valid
+			if (!contains_node(startNode))
+				throw std::out_of_range("ERROR: Start node does not exist in the graph!\n");
+
+			ssuds::Stack<N> frontier;
+			ssuds::UnorderedMap<N, bool> visited;
+			traversalMap.clear();
+
+			frontier.push(startNode);
+			visited[startNode] = true;
+			traversalMap.append(std::make_pair(startNode, N()));
+
+			// Loop through the stack
+			while (!frontier.empty()) {
+				N current = frontier.top();
+				frontier.pop();
+				typename UnorderedMap<N, UnorderedMap<N, E>>::UnorderedMapIterator it = mData.find(current);
+				
+				// Check that the iterator is valid
+				if (it != mData.end()) {
+					// Iterate through the current nodes edges
+					for (std::pair<N, E>& edges : (*it).second) {
+						N neighbor = edges.first;
+
+						// Check if that edge has been visited
+						if (!visited[neighbor]) {
+							visited[neighbor] = true;
+							frontier.push(neighbor);
+							traversalMap.append(std::make_pair(neighbor, current));
+						}
+					}
+				}
+			}
 		}
 	};
 }

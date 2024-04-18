@@ -100,7 +100,7 @@ void misc::VisualGraph::load(const std::string& fname) {
 	}
 }
 
-void misc::VisualGraph::handleMouseClick(const float X, const float Y, bool end) {
+ssuds::ArrayList<int> misc::VisualGraph::handleMouseClick(const float X, const float Y, bool end) {
 	unsigned int nodeCount;
 
 	// Check if both the start and end node are wanted
@@ -137,4 +137,22 @@ void misc::VisualGraph::handleMouseClick(const float X, const float Y, bool end)
 			break;
 		}
 	}
+
+	return _selectedNodes;
+}
+
+void misc::VisualGraph::breadthFirstTraversal(ssuds::ArrayList<std::pair<int, int>>& traversalMap) {
+	// Check that there is a start node
+	if (_selectedNodes.size() == 0)
+		throw std::out_of_range("ERROR: No start node was selected!\n");
+
+	mInternalGraph.breadthFirst(traversalMap, _selectedNodes[0]);
+}
+
+void misc::VisualGraph::depthFirstTraversal(ssuds::ArrayList<std::pair<int, int>>& traversalMap) {
+	// Check that there is a start node
+	if (_selectedNodes.size() == 0)
+		throw std::out_of_range("ERROR: No start node was selected!\n");
+
+	mInternalGraph.depthFirst(traversalMap, _selectedNodes[0]);
 }
