@@ -1,6 +1,6 @@
 #include <iostream>
 
-#define LAB_NUM 9 // 0 Runs GoogleTest
+#define LAB_NUM 10
 
 #if LAB_NUM == 0
 #include <gtest/gtest.h>
@@ -982,13 +982,11 @@ bool compareByValueDesc(const std::pair<std::string, unsigned int>& a, const std
 	return a.second > b.second;
 }
 
-#elif LAB_NUM 9
+#elif LAB_NUM == 9
 #include <SFML/Graphics.hpp>
 #include <text_circle.h>
 #include <Array_List_v2.hpp>
 #include <Graph.hpp>
-
-#define FILE_PATH "../../media/sample-map.txt"
 
 int main() {
 	sf::Font font;
@@ -1000,7 +998,7 @@ int main() {
 	sf::TextCircle game;
 	ssuds::ArrayListV2<sf::TextCircle> nodes;
 	ssuds::Graph<int, float> edges;
-	game.readFromFile(FILE_PATH, font, nodes, edges);
+	game.readFromFile("../../media/sample-map.txt", font, nodes, edges);
 	sf::RenderWindow window(sf::VideoMode(800, 600), "Graph Visualization");
 
 	// Main loop
@@ -1039,6 +1037,98 @@ int main() {
 		}
 
 		window.display();
+	}
+}
+
+#elif LAB_NUM == 10
+#include <SFML/Graphics.hpp>
+#include <visual_graph.h>
+
+void printTraversal(const ssuds::ArrayListV2<std::pair<int, int>>& traversalMap);
+
+int main() {
+	sf::RenderWindow window(sf::VideoMode(1024, 768), "Graph Viewer");
+
+	sf::Font statusFont, circleFont;
+	if (!statusFont.loadFromFile("../../media/fonts/Courier_Prime/CourierPrime-Regular.ttf") ||
+		!circleFont.loadFromFile("../../media/fonts/Open_Sans/static/OpenSans-Regular.ttf"))
+		std::cout << "Error loading fonts\n";
+
+	misc::VisualGraph GC(circleFont, "../../media/output.txt");
+	ssuds::ArrayListV2<int> selectedNodes;
+
+	ssuds::ArrayListV2<std::string> userMessages = { "Please select the starting node!", "Please select the end node!", "Press 'B' for Breadth-First traversal!\nPress 'D' for Depth-First traversal!" };
+	sf::Text userMessage;
+	userMessage.setFont(statusFont);
+	userMessage.setString(userMessages[0]);
+	userMessage.setCharacterSize(24);
+	userMessage.setFillColor(sf::Color::White);
+	userMessage.setPosition(10, 0);
+
+	// Main loop
+	while (window.isOpen()) {
+		sf::Event event;
+
+		// Event handler loop
+		while (window.pollEvent(event)) {
+			// Check if the window needs to be closed
+			if (event.type == sf::Event::Closed ||
+				(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)) {
+				window.close();
+			}
+
+			// Check if a node was attempted to be selected
+			if (event.type == sf::Event::MouseButtonPressed &&
+				event.mouseButton.button == sf::Mouse::Left) {
+				float mouseX = event.mouseButton.x;
+				float mouseY = event.mouseButton.y;
+				selectedNodes = GC.handleMouseClick(mouseX, mouseY);
+
+				if (selectedNodes.size() > 0)
+					userMessage.setString(userMessages[2]);
+				else
+					userMessage.setString(userMessages[0]);
+			}
+
+			// Check if a breath first traversal is desired
+			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::B) {
+				ssuds::ArrayListV2<std::pair<int, int>> traversals;
+				GC.breadthFirstTraversal(traversals);
+				std::cout << "\nBreadth Traversal: ";
+				printTraversal(traversals);
+			}
+
+			// Check if a deapth first traversal is desired
+			if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::D) {
+				ssuds::ArrayListV2<std::pair<int, int>> traversals;
+				GC.depthFirstTraversal(traversals);
+				std::cout << "\nDepth Traversal: ";
+				printTraversal(traversals);
+			}
+		}
+
+		window.clear();
+		GC.draw(window);
+		window.draw(userMessage);
+		window.display();
+	}
+
+	return 0;
+}
+
+void printTraversal(const ssuds::ArrayListV2<std::pair<int, int>>& traversalMap) {
+	std::cout << "{";
+
+	for (unsigned int i = 0; i < traversalMap.size(); i++) {
+		// Check if this is the last element
+		if (i == traversalMap.size() - 1) {
+			std::cout << traversalMap[i].first << ":" << traversalMap[i].second << "}\n";
+			continue;
+		}
+		else if (i == 0)
+			std::cout << traversalMap[i].first << ":None, ";
+		else
+			std::cout << traversalMap[i].first << ":" << traversalMap[i].second << ", ";
 	}
 }
 

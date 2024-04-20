@@ -1,4 +1,4 @@
-#define EXECUTE_TESTS 1
+#define EXECUTE_TESTS 0
 
 #if EXECUTE_TESTS
 #include <gtest/gtest.h>

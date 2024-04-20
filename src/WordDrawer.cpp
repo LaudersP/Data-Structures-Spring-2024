@@ -21,7 +21,7 @@ WordDrawer::~WordDrawer() {
 
 // Function to ensure there is always 10 words in the queue
 void WordDrawer::FillQueue() {
-	while (_wordQueue.Size() < _queueSize) {
+	while (_wordQueue.size() < _queueSize) {
 		std::string line;
 
 		if (std::getline(_SCOWL, line))
@@ -30,7 +30,7 @@ void WordDrawer::FillQueue() {
 }
 
 std::string WordDrawer::GetWord() {
-	std::string word = _wordQueue.Top();
+	std::string word = _wordQueue.head();
 
 	_wordQueue.dequeue();
 

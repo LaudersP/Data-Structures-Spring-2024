@@ -111,7 +111,7 @@ void sf::TextCircle::readFromFile(const std::string& file_path, const sf::Font& 
 			sf::Color color(r, g, b);
 			TextCircle node(x, y, font, label);
 			node.setCircleColor(color);
-			nodes.Append(node);
+			nodes.append(node);
 			edges.add_node(id);
 		}
 		// Check if the data line is a edge
@@ -127,7 +127,7 @@ void sf::TextCircle::readFromFile(const std::string& file_path, const sf::Font& 
 			std::getline(dataLine, temp, ':');
 			value = std::stof(temp);
 
-			edges.add_edge(startID, endID, value);
+			edges.set_edge(startID, endID, value);
 		}
 		else
 			throw std::exception("ERROR: Unknown data type!\n");
@@ -161,4 +161,33 @@ void sf::TextCircle::drawArrow(sf::RenderWindow& window, const sf::Vector2f& sta
 
 	window.draw(line, 2, sf::Lines);
 	window.draw(arrow, 3, sf::Triangles);
+}
+
+void sf::TextCircle::set_highlight(const TextCircleHighlightMode& m) {
+	mHMode = m;
+	mCircle.setOutlineThickness(2.0f);
+	switch (mHMode) {
+	case sf::TextCircleHighlightMode::NONE:
+		mCircle.setOutlineColor(sf::Color::Black);
+		mCircle.setOutlineThickness(0.0f);
+		break;
+	case sf::TextCircleHighlightMode::RED:
+		mCircle.setOutlineColor(sf::Color::Red);
+		break;
+	case sf::TextCircleHighlightMode::GREEN:
+		mCircle.setOutlineColor(sf::Color::Green);
+		break;
+	case sf::TextCircleHighlightMode::BLUE:
+		mCircle.setOutlineColor(sf::Color::Blue);
+		break;
+	case sf::TextCircleHighlightMode::WHITE:
+		mCircle.setOutlineColor(sf::Color::White);
+		break;
+	default:
+		break;
+	}
+}
+
+float sf::TextCircle::get_radius() const {
+	return mCircle.getRadius();
 }
