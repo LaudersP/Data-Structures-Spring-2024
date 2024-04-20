@@ -6,8 +6,9 @@
 #include <Graph_V2.hpp>
 #include <cmath>
 
-namespace sf
-{
+namespace sf {
+	enum class TextCircleHighlightMode {NONE, RED, GREEN, BLUE, WHITE};
+
 	/// <summary>
 	/// A Simple Circle with text centered in it
 	/// </summary>
@@ -28,6 +29,11 @@ namespace sf
 		/// The bounding area for the text
 		/// </summary>
 		sf::FloatRect mTextRect;
+
+		/// <summary>
+		/// What kind of highlightt, if any to use
+		/// </summary>
+		TextCircleHighlightMode mHMode;
 	public:
 		/// <summary>
 		/// Default constructor -- doesn't initialize anything
@@ -101,6 +107,25 @@ namespace sf
 		/// <param name="file_path">The file path to the Graph code</param>
 		void readFromFile(const std::string& file_path, const sf::Font& font, ssuds::ArrayListV2<TextCircle>& nodes, ssuds::Graph<int, float>& edges);
 
+
+		/// <summary>
+		/// Draw lines with arrow heads in the direction
+		/// </summary>
+		/// <param name="window"></param>
+		/// <param name="startPos"></param>
+		/// <param name="endPos"></param>
 		void drawArrow(sf::RenderWindow& window, const sf::Vector2f& startPos, const sf::Vector2f& endPos);
+
+		/// <summary>
+		/// Sets the highlight mode
+		/// </summary>
+		/// <param name="m"></param>
+		void set_highlight(const TextCircleHighlightMode& m);
+
+		/// <summary>
+		/// Returns the radius of a circle
+		/// </summary>
+		/// <returns></returns>
+		float get_radius() const;
 	};
 }

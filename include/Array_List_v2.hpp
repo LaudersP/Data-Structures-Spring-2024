@@ -1,504 +1,426 @@
-#ifndef ARRAY_LIST_V2_H
-#define ARRAY_LIST_V2_H
-
+#pragma once
+#include <string>
 #include <ostream>
 
-namespace ssuds {
-	template <class L>
+// Note: in C++, a general tempate (like this one) must be defined inline
+// entirely in the .h file (no .cpp files).  So, in this lab, array_list.cpp
+// contents are moved here
 
+namespace ssuds {
+	// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+	// @ ENUM CLASSES                           @
+	// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+	enum class ArrayListIteratorType { forward, backwards };
+
+	/// An ArrayList is an array-based data structure. 
+	template <class T>
 	class ArrayListV2 {
+		// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+		// @ NESTED CLASSES                         @
+		// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 	public:
-		// Nested class for iterator functionality
+		/// <summary>
+		///  This is a forward/backwards iterator to traverse the values in an ArrayList
+		/// </summary>
 		class ArrayListIterator {
 		protected:
-			// Pointer to an ArrayList
-			ArrayListV2* _ptr;
+			/// <summary>
+			/// A pointer to the controlling array list
+			/// </summary>
+			const ArrayListV2* mArrayList;
 
-			// Iterator index
-			int _index;
+			/// <summary>
+			///  The current position / index in our traversal
+			/// </summary>
+			int mPosition;
+
+			/// <summary>
+			/// The type of traversal we're doing (forward or backwards)
+			/// </summary>
+			ArrayListIteratorType mType;
 
 		public:
-			// Default constructor
-			ArrayListIterator() {
-				_ptr = nullptr;
-				_index = NULL;
+			/// <summary>
+			///  The constructor (called indirectly by begin and rbegin in the ArrayList)
+			/// </summary>
+			/// <param name="arr">The array we're traversing</param>
+			/// <param name="tp">The type of traversal to do</param>
+			/// <param name="start_index">The starting index</param>
+			ArrayListIterator(const ArrayListV2* arr, ArrayListIteratorType tp, int start_index) : mArrayList(arr), mPosition(start_index), mType(tp) {
+				// intentionally empty
 			}
 
-			// Iterator instance constructor
-			ArrayListIterator(ArrayListV2* p, int i) : _ptr(p), _index(i) {
-				// Empty, on purpose
+			/// Comparison with another iterator
+			bool operator==(const ArrayListIterator& other) const {
+				return mArrayList == other.mArrayList && mPosition == other.mPosition && mType == other.mType;
 			}
 
-			// === Operator overloads ===
-			L& operator*() const {
-				// Return current value in iterator
-				return (*_ptr)[_index];
+			/// Not-comparison with another iterator
+			bool operator!=(const ArrayListIterator& other) const {
+				return mArrayList != other.mArrayList || mPosition != other.mPosition || mType != other.mType;
 			}
 
-			ArrayListIterator& operator++() {
-				// The pre-fix version (++iter)
-				++_index;
-				return *this;
+			/// <summary>
+			/// Advance operator.  Called by doing ++it
+			/// </summary>
+			void operator++() {
+				if (mType == ArrayListIteratorType::forward)
+					++mPosition;
+				else
+					--mPosition;
 			}
 
-			bool operator!=(const ArrayListIterator& other) {
-				// Return true if we are NOT like 'other'
-				// Return false if we are like 'other'
-				return _index != other._index || _ptr != other._ptr;
+			/// <summary>
+			/// Advance operator.  Called by doing it++
+			/// </summary>
+			/// <param name=""></param>
+			void operator++(int) {
+				return ++(*this);
+			}
+
+			/// <summary>
+			///  De-reference style operator
+			/// </summary>
+			/// <returns>A reference to the value at the current spot</returns>
+			T& operator*() {
+				return (*mArrayList)[mPosition];
 			}
 		};
 
+		// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+		// @ ATTRIBUTES                              @
+		// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 	protected:
-		/// The number of USED slots in the array
-		unsigned int _size;
+		/// The default (and minimum) capacity of an ArrayList
+		static const int msMinCapacity = 5;
 
-		/// Minimum number of AVAILABLE slots in the array
-		static const unsigned int _capacityMinimum = 1;
+		/// The current number of "slots" AVAILABLE in mData (i.e. the array size)
+		unsigned int mCapacity;
 
-		/// The number of AVAILABLE slots in the array
-		unsigned int _capacity;
+		/// How many slots are we USING?  This will always be less than or equal to mCapacity
+		unsigned int mSize;
 
-		/// Pointer to array
-		L* _data;
+		/// The array of data we're currently holding
+		T* mData;
 
-		/***************************************************************************//**
-		* @brief Doubles the capacity of the array list.
-		*
-		* Increase the capacity of the array list by doubling it, much more efficent
-		* way then adding one spot at a time and transferring the old array over.
-		******************************************************************************/
-		void Grow() {
-			// Double the capacity of the list
-			_capacity *= 2;
 
-			// Allocate memory for the new array
-			L* tempData = new L[_capacity];
-
-			// Copy over the data from the old array
-			for (unsigned int i = 0; i < _size; i++) {
-				tempData[i] = _data[i];
-			}
-
-			// Unallocate the old array
-			delete[] _data;
-
-			// Set the '_data' pointer to 'tempData'
-			_data = tempData;
-		}
-
+		// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+		// @ OPERATOR OVERLOADS                      @
+		// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 	public:
-		/***************************************************************************//**
-		* @brief Constructor of ArrayList class.
-		*
-		* Initializes default values for ArrayList.
-		******************************************************************************/
-		ArrayListV2() {
-			// Set defualt values
-			_size = 0;
-			_capacity = _capacityMinimum;
 
-			// Allocate memory for the array
-			_data = new L[_capacity];
-		}
-
-		/***************************************************************************//**
-		* @brief Copy constructor of ArrayList class.
-		*
-		* Copies arrays for ArrayListV2.
-		******************************************************************************/
-		ArrayListV2(const ArrayListV2& other) {
-			// Copy over the starting values from the cloning array
-			_size = other._size;
-			_capacity = other._capacity;
-
-			// Allocate memory for the new array
-			_data = new L[_capacity];
-
-			// Copy items from the cloning array to the new array
-			for (unsigned int i = 0; i < other._size; i++) {
-				_data[i] = other[i];
+		/// <summary>
+		/// Overloads the stream operator for ArrayLists.
+		/// </summary>
+		/// <param name="os">an ostream object (ofstream, stringstream, cout, etc.) </param>
+		/// <param name="alist">the ArrayList</param>
+		/// <returns>the (possibly modified) os that was given to us</returns>
+		friend std::ostream& operator <<(std::ostream& os, const ArrayListV2<T>& alist) {
+			os << "[";
+			for (unsigned int i = 0; i < alist.size(); i++) {
+				os << alist[i];
+				if (i < alist.size() - 1)
+					os << ", ";
 			}
+			os << "]";
+			return os;
 		}
 
-		/***************************************************************************//**
-		* @brief Move constructor of ArrayList class.
-		*
-		* Moves an array to another ArrayListV2 instance.
-		******************************************************************************/
-		ArrayListV2(ArrayListV2&& other) : _size(other._size), _capacity(other._capacity), _data(other._data) {
-			// Reset the source object
-			other._size = 0;
-			other._capacity = _capacityMinimum;
-			other._data = new L[_capacity];
+		/// <summary>
+		/// Gets the data item at the given index.  This will throw an std::out_of_bounds exception if index is invalid (less than 0 or >= size)
+		/// </summary>
+		/// <param name="index">the index of the thing to return</param>
+		/// <returns>a reference to the value at the given index</returns>
+		T& operator[](unsigned int index) const {
+			if (index >= mSize)
+				throw std::out_of_range("Invalid index: " + std::to_string(index));
+
+			return mData[index];
 		}
 
-		/***************************************************************************//**
-		* @brief Constructor of ArrayListV2 class with initializer list
-		*
-		* Initializes an ArrayListV2 instance with elements from the provided initializer_list.
-		* Appends each element from the initializer_list to the ArrayListV2.
-		******************************************************************************/
-		ArrayListV2(std::initializer_list<L> initList) : ArrayListV2() {
-			// Initialize the ArrayList with elements from the initializer_list
-			for (const auto& item : initList) {
-				Append(item);
-			}
+
+		ArrayListV2<T>& operator= (const ArrayListV2<T>& other) {
+			clear();
+			mData = new T[other.mCapacity];
+			for (unsigned int i = 0; i < other.mSize; i++)
+				mData[i] = other[i];
+			mCapacity = other.mCapacity;
+			mSize = other.mSize;
+			return *this;
 		}
 
-		/***************************************************************************//**
-		* @brief Destructor of ArrayList class.
-		*
-		* Deallocates memory used for ArrayList.
-		******************************************************************************/
+
+		// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+		// @ CONSTRUCTORS / DESTRUCTORS              @
+		// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+	public:
+		/// Default constructor
+		ArrayListV2() : mSize(0), mCapacity(0), mData(nullptr) {
+			// intentionally empty
+		};
+
+		/// Copy-constructor
+		ArrayListV2(const ArrayListV2& other) : mCapacity(other.mCapacity), mSize(other.mSize) {
+			mData = new T[mCapacity];
+			for (unsigned int i = 0; i < other.size(); i++)
+				mData[i] = other[i];
+		}
+
+		/// Move-constructor: "steals" the data (shallow copy) from a soon-to-be-destroyed other ArrayList
+		ArrayListV2(ArrayListV2&& other) : mCapacity(other.mCapacity), mSize(other.mSize), mData(other.mData) {
+			other.mData = NULL;
+			other.mCapacity = 0;
+			other.mSize = 0;
+		}
+
+		/// Initializer-list constructor
+		ArrayListV2(std::initializer_list<T> ilist) : mCapacity((int)ilist.size()), mSize((int)ilist.size()) {
+			mData = new T[mCapacity];
+			int i = 0;
+			for (T val : ilist)
+				mData[i++] = val;
+		}
+
+		/// Destructor
 		~ArrayListV2() {
-			// Unallocate memory used by the array
-			delete[] _data;
+			if (mData)
+				delete[] mData;
 		}
 
-		/***************************************************************************//**
-		* @brief Append a item to the end of the array.
-		*
-		* @param s The item to be appended.
-		******************************************************************************/
-		void Append(const L& item) {
-			// Check if the list capacity needs to be expanded
-			if (_size == _capacity) {
-				Grow();
-			}
 
-			// Add 'item' to the end
-			_data[_size] = item;
+		// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+		// @ OTHER METHODS (alphabetical)            @
+		// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+	public:
+		/// <summary>
+		///  Inserts a new element at the end of the array
+		/// </summary>
+		/// <param name="val">the new value to add</param>
+		void append(const T val) {
+			// check to see if we need to increase our capacity
+			grow();
 
-			// Increase array size
-			_size++;
+			// Stick our new element in the last slot and (sneakily) increase our size in the process
+			mData[mSize] = val;
+			mSize++;
 		}
 
-		/***************************************************************************//**
-		* @brief Gets the current USED spots of the array list.
-		*
-		* @return The current USED spots of the list.
-		******************************************************************************/
-		unsigned int Size() const {
-			return _size;
+
+		/// <summary>
+		/// Create and return a forward iterator 
+		/// </summary>
+		/// <returns>a forward iterator</returns>
+		ArrayListIterator begin() const {
+			return ArrayListIterator(this, ArrayListIteratorType::forward, 0);
 		}
 
-		/***************************************************************************//**
-		* @brief Gets the current AVALIABLE slots of the array list.
-		*
-		* @return The current AVALIABLE slots of the list.
-		******************************************************************************/
-		unsigned int Capacity() const {
-			return _capacity;
+
+		/// <summary>
+		/// Gets the current capacity of the array list
+		/// </summary>
+		/// <returns>current capacity (which should always be >= size)</returns>
+		unsigned int capacity() const {
+			return mCapacity;
 		}
 
-		/***************************************************************************//**
-		* @brief Insert a item at a set position in the array.
-		*
-		* @param s The item to be inserted.
-		* @param position The index for the item to be inserted at.
-		******************************************************************************/
-		void Insert(const L& item, const unsigned int index) {
-			// Check that index is in range of the array
-			if (index >= 0 && index < _size) {
-				// Check that the array is capable of insertion
-				// 1. If the array is empty
-				// 2. If the position will be the last slot
-				if ((_size == 0 && _capacity == _capacityMinimum) || (index == (_size + 1))) {
-					// Append the item instead
-					Append(item);
-
-					return;
-				}
-
-				// === Insertion ===
-				// Check if the array need to be grown
-				if (_size == _capacity) {
-					Grow();
-				}
-
-				// Increase the array size
-				_size++;
-
-				// Loop through the back items of the array until reaching 'index'
-				for (unsigned int i = _size; i > index; i--) {
-					// Copy everything one spot right in the array so the 'index' is empty
-					_data[i] = _data[i - 1];
-				}
-
-				// Insert item
-				_data[index] = item;
-			}
-			else {
-				throw std::out_of_range("Provided position is out of range!");
-			}
+		/// <summary>
+		/// Clears the array back to its original state
+		/// </summary>
+		void clear() {
+			if (mData)
+				delete[] mData;
+			mData = nullptr;
+			mSize = 0;
+			mCapacity = 0;
 		}
 
-		/***************************************************************************//**
-		* @brief Clears the array and resets it back to the beginning values.
-		*
-		* Similar to the destructor but meant to be used during list's lifetime.
-		******************************************************************************/
-		void Clear() {
-			// Check if '_data' is not null before deleting
-			if (_data != nullptr) {
-				// Unallocate array memory
-				delete[] _data;
-			}
-
-			// Set '_data' to nullptr
-			_data = nullptr;
-
-			// Reset variables to defaule
-			_size = 0;
-			_capacity = _capacityMinimum;
+		/// <summary>
+		/// Returns a special iterator value indicating we've reached the end of iteration
+		/// </summary>
+		/// <returns>special end iterator value</returns>
+		ArrayListIterator end() const {
+			return ArrayListIterator(this, ArrayListIteratorType::forward, mSize);
 		}
 
-		/***************************************************************************//**
-		* @brief Find a item in the array, with a optional starting location.
-		*
-		* @param s Item to be found.
-		* @param index Desired starting position (optional).
-		*
-		* @return Index the item is found at or -1 if not found.
-		******************************************************************************/
-		int Find(const L& item, const unsigned int index = 0) const {
-			// Check that the 'index' is in range
-			if (index >= 0 && index < _size) {
-				// Loop through the array
-				for (unsigned int i = index; i < _size; i++) {
-					// Check that 'item' has been found
-					if (_data[i] == item) {
-						// Return found index position
-						return i;
-					}
-				}
+		/// <summary>
+		/// Finds the index of the first occurrence of the given value
+		/// </summary>
+		/// <param name="val">the value to search for</param>
+		/// <param name="start_index">the index to start searching at</param>
+		/// <returns></returns>
+		int find(const T val, unsigned int start_index = 0) const {
+			if (start_index >= mSize)
+				throw std::out_of_range("Invalid index: " + std::to_string(start_index));
 
-				// 'item' was not found
-				return -1;
+			for (unsigned int i = start_index; i < mSize; i++) {
+				if (mData[i] == val)
+					return i;
 			}
-			else {
-				throw std::out_of_range("Provided position is out of range");
-			}
+
+			// We didn't find it
+			return -1;
 		}
 
-		/***************************************************************************//**
-		* @brief Remove a item at a given index position.
-		*
-		* @param index Position of the item to remove.
-		******************************************************************************/
-		void Remove(const unsigned int index) {
-			// Check that 'index' is in range
-			if (index >= 0 && index < _size) {
-				// Loop from the desired index to the end of the array
-				for (unsigned int i = index; i < _size - 1; i++) {
-					// Copy everything one spot left in the array
-					_data[i] = _data[i + 1];
-				}
 
-				// Decrease the array size
-				_size--;
 
-				// Check if the array can be shrunk
-				if ((_capacity / 2) == _size) {
-					// Half the array's capacity
-					_capacity /= 2;
+		/// <summary>
+		/// Inserts a new data item at a given index
+		/// </summary>
+		/// <param name="val">the new value to insert</param>
+		/// <param name="index">the index at which to insert (must be >= 0 and <= size) </param>
+		void insert(T val, unsigned int index) {
+			if (index > mSize)
+				throw std::out_of_range("Invalid index: " + std::to_string(index));
 
-					// Allocate memory for the new array
-					L* tempData = new L[_capacity];
+			// check to see if we need to increase capacity first
+			grow();
 
-					// Copy over the old data
-					for (unsigned int i = 0; i < _size; i++) {
-						tempData[i] = _data[i];
-					}
+			// Move all the elements that come *after* index up one spot
+			for (unsigned int i = mSize; i > index; i--)
+				mData[i] = mData[i - 1];
 
-					// Delete the old array
-					delete[] _data;
-
-					// Set the '_data' pointer to the 'tempData' pointer
-					_data = tempData;
-				}
-			}
-			else {
-				throw std::out_of_range("Provided position is out of range!");
-			}
+			// Put our new elements in spot index and increase our size
+			mData[index] = val;
+			mSize++;
 		}
 
-		/***************************************************************************//**
-		* @brief Remove all instances of a desired item from the array.
-		*
-		* @param s Item to find and remove from the entire array.
-		*
-		* @return The number of times the given item was removed.
-		******************************************************************************/
-		int Remove_All(const L& item) {
-			// Variable to hold the position of the 'item' found for removal
-			//	prevents unneeded loops through the array. Loops once now.
-			unsigned int cur_index = 0;
 
-			// Number of items removed from the array
-			unsigned int num_removed = 0;
+		/// <summary>
+		/// Create and return a reverse iterator 
+		/// </summary>
+		/// <returns>a reverse iterator</returns>
+		ArrayListIterator rbegin() const {
+			return ArrayListIterator(this, ArrayListIteratorType::backwards, mSize - 1);
+		}
 
-			// While 'cur_index' is in range of the array's size
-			while (cur_index >= 0 && cur_index < _size) {
-				// Find the next occurence
-				cur_index = Find(item, cur_index);
 
-				// If the occurence is found
+		/// <summary>
+		/// Returns a special reverse end iterator value indicating we've reached the end of iteration
+		/// </summary>
+		/// <returns>special reverse end iterator value</returns>
+		ArrayListIterator rend() const {
+			return ArrayListIterator(this, ArrayListIteratorType::backwards, -1);
+		}
+
+
+		/// <summary>
+		/// Removes a data item at the given index
+		/// </summary>
+		/// <param name="index">the index of the thing to remove (will return a std::out_of_bounds exception if invalid (<0 or >= size)</param>
+		/// <param name="resize_if_necessary">if true, the array will be resized if it is now below half capacity</param>
+		/// <returns>the data item that was just removed</returns>
+		T remove(unsigned int index, bool resize_if_necessary = true) {
+			if (index >= mSize)
+				throw std::out_of_range("Invalid index: " + std::to_string(index));
+
+			// Get the value we'll return at the end (the element removed)
+			T result = mData[index];
+
+			// Move all elements that come after index down one spot
+			for (unsigned int i = index; i < mSize - 1; i++)
+				mData[i] = mData[i + 1];
+
+			// Decrement our size
+			mSize--;
+
+			// Shrink, if applicable and requested
+			if (resize_if_necessary)
+				shrink();
+
+			// Return the result
+			return result;
+		}
+
+		/// <summary>
+		/// Removes all occurrences of a given value.  Uses find and remove internally to do the removal
+		/// </summary>
+		/// <param name="val">the value to remove</param>
+		/// <param name="resize_if_necessary">if true, the array will be resized if it is now below half capacity</param>
+		/// <returns>the number of occurrences of that data item that were removed</returns>
+		int remove_all(const T val, bool resize_if_necessary = true) {
+			int cur_index = 0;
+			int num_removed = 0;
+			while (cur_index >= 0 && cur_index < (int)mSize) {
+				// Find the next occurrence of val, starting at the current position
+				cur_index = find(val, cur_index);
 				if (cur_index >= 0) {
-					// Remove the item at the found index
-					Remove(cur_index);
-
-					// Increase the removed count
+					// We found one!
+					remove(cur_index, false);
 					num_removed++;
 				}
 			}
 
+			if (resize_if_necessary)
+				shrink();
+
 			return num_removed;
 		}
 
-		/***************************************************************************//**
-		* @brief Gets a item at a defined index.
-		*
-		* @param index The position of the desired item.
-		*
-		* @return The a referene of the item at position of the index value.
-		******************************************************************************/
-		L& operator[](const unsigned int index) const {
-			// Check that 'index' is in range
-			if (index >= 0 && index < _size) {
-				// Return the irem at position 'index'
-				return _data[index];
-			}
-			else {
-				throw std::out_of_range("Provided position is out of range!");
-			}
+		/// <summary>
+		/// Returns the size of the internal array (i.e.) how many things are being stored in the ArrayList
+		/// </summary>
+		/// <returns>the size of the ArrayList</returns>
+		unsigned int size() const {
+			return mSize;
 		}
 
-		/***************************************************************************//**
-		* @brief Output the array in a Python like format
-		*
-		* @param os Stream the array should be outputted via.
-		*
-		* @param a Array output will be from.
-		*
-		* @return The array in Python like format via chosen stream.
-		******************************************************************************/
-		friend std::ostream& operator<< (std::ostream& os, const ArrayListV2& a) {
-			// Check if list has items
-			if (a.Size() != 0) {
-				// Output in Python like format
-				for (unsigned int i = 0; i < a.Size(); i++) {
-					if (i == 0) {
-						os << "[" << a[i];
 
-						if (i == (a.Size() - 1)) {
-							os << "]";
-						}
-					}
-					else if (i == (a.Size() - 1)) {
-						os << ", " << a[i] << "]";
-					}
-					else {
-						os << ", " << a[i];
-					}
-				}
-			}
-			else {
-				// Output empty array
-				os << "[]";
-			}
+	protected:
+		/// <summary>
+		/// An internal method to resize the array if we are currently at capacity (if we are not, nothing is done)
+		/// </summary>
+		void grow() {
+			if (mSize == mCapacity) {
+				// Allocate what will become the new array
+				T* new_array = nullptr;
+				if (mCapacity == 0)
+					new_array = new T[msMinCapacity];
+				else
+					new_array = new T[mCapacity * 2];
 
-			return os;
-		}
+				// Copy over data from the old array (if any)
+				if (mData != nullptr) {
+					for (unsigned int i = 0; i < mSize; i++)
+						new_array[i] = mData[i];
 
-		/***************************************************************************//**
-		* @brief 'Deep-copy' the array to another instance.
-		*
-		* @param other Array to copy from.
-		*
-		* @return The new copy of the array.
-		******************************************************************************/
-		ArrayListV2& operator= (const ArrayListV2& other) {
-			// Copy over the starting values from the cloning array
-			_size = other._size;
-			_capacity = other._capacity;
-
-			// Free up the old data
-			delete[] _data;
-
-			// Allocate memory for the new 'deep-copy'
-			_data = new L[_capacity];
-
-			// Loop through copying array
-			for (unsigned int i = 0; i < other.Size(); i++) {
-				// Copy over old data
-				_data[i] = other[i];
-			}
-
-			return *this;
-		}
-
-		/***************************************************************************//**
-		* @brief Compares two ArrayList and tests if they are equal.
-		*
-		* @param The ArrayList object to compare to.
-		*
-		* @return True if equal, false if not.
-		******************************************************************************/
-		bool operator==(const ArrayListV2& other) {
-			if ((_size == other._size) && (_capacity == other._capacity)) {
-				for (unsigned int i = 0; i < other.Size(); i++) {
-					if (_data[i] != other[i])
-						return false;
+					// Destroy the old array
+					delete[] mData;
 				}
 
-				return true;
+				// Make the new array *the* array
+				mData = new_array;
+
+				// Note that our capacity is now double what it used to be
+				if (mCapacity == 0)
+					mCapacity = msMinCapacity;
+				else
+					mCapacity *= 2;
 			}
-			else {
-				return false;
+		}
+
+
+		/// <summary>
+		/// An internal method to see if the array can be shrunk (capacity reduced by half, down to msMinCapacity)
+		/// </summary>
+		void shrink() {
+			if (mSize < mCapacity / 2 && mCapacity >= msMinCapacity * 2) {
+				// Allocate what will become the new array
+				T* new_array = new T[mCapacity / 2];
+
+				// Copy over data from the old array (if any)
+				for (unsigned int i = 0; i < mSize; i++)
+					new_array[i] = mData[i];
+
+
+				// Destroy the old array
+				delete[] mData;
+
+				// Make the new array *the* array
+				mData = new_array;
+
+				// Note that our capacity is now double what it used to be
+				mCapacity /= 2;
 			}
-		}
-
-		/***************************************************************************//**
-		* @brief Used to get the beginning of the iterator.
-		*
-		* @return The iterator pointing to the beginning of the ArrayList.
-		******************************************************************************/
-		ArrayListIterator begin() {
-			ArrayListIterator iter(this, 0);
-			return iter;
-		}
-
-		/***************************************************************************//**
-		* @brief Used to get the ending of the iterator.
-		*
-		* @return The iterator pointing to one slot past the end of the ArrayList.
-		******************************************************************************/
-		ArrayListIterator end() {
-			ArrayListIterator iter(this, _size);
-			return iter;
-		}
-
-		/***************************************************************************//**
-		* @brief Used to get the reverse iterator pointing to the last element.
-		*
-		* @return The reverse iterator pointing to the last element.
-		******************************************************************************/
-		ArrayListIterator rbegin() {
-			ArrayListIterator iter(this, _size - 1);
-			return iter;
-		}
-
-		/***************************************************************************//**
-		* @brief Used to get the reverse iterator pointing to the position before the first element.
-		*
-		* @return The reverse iterator pointing to the position before the first element.
-		******************************************************************************/
-		ArrayListIterator rend() {
-			ArrayListIterator iter(this, 0);
-			return iter;
 		}
 	};
 }
-
-#endif
