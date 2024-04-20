@@ -32,6 +32,7 @@
     <ClCompile Include="..\..\src\TextCircle.cpp" />
     <ClCompile Include="..\..\src\text_circle.cpp" />
     <ClCompile Include="..\..\src\UnorderedMap_Tests.cpp" />
+    <ClCompile Include="..\..\src\visual_graph.cpp" />
     <ClCompile Include="..\..\src\WordDrawer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -48,6 +49,7 @@
     <ClInclude Include="..\..\include\TextCircle.hpp" />
     <ClInclude Include="..\..\include\text_circle.h" />
     <ClInclude Include="..\..\include\UnorderedHashMap.hpp" />
+    <ClInclude Include="..\..\include\visual_graph.h" />
     <ClInclude Include="..\..\include\WordDrawer.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
